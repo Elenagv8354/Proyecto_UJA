@@ -81,10 +81,10 @@
         android:layout_marginStart="30dp"
         android:layout_marginTop="30dp"
         android:layout_marginEnd="30dp"
+        android:text="Inicia Sesión"
         android:background="@drawable/button_background"
-        android:padding="16dp"
-        android:text="Iniciar Sesión"
         android:textColor="@android:color/white"
+        android:padding="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/edit_contrasena" />
