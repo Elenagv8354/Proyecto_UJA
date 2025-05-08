@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/menu_principal_nav_graph"
+    app:startDestination="@id/fragmentMenu1">
+
+    <fragment
+        android:id="@+id/fragmentMenu1"
+        android:name= "com.example.walletssi.FragmentMenu1"
+        android:label="FragmentMenu1"
+        tools:layout="@layout/fragment_menu1" />
+
+    <fragment
+        android:id="@+id/fragmentCredencial"
+        android:name="com.example.walletssi.FragmentCredencial"
+        android:label="FragmentCredencial"
+        tools:layout="@layout/fragment_credencial" />
+
+    <action
+        android:id="@+id/action_menu1_to_credencial"
+        app:destination="@id/fragmentCredencial" />
+
+    <action
+        android:id="@+id/action_credencial_to_menu1"
+        app:destination="@id/fragmentMenu1" />
+
+</navigation>
