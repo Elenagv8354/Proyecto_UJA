@@ -9,13 +9,23 @@
         android:id="@+id/fragmentMenu1"
         android:name= "com.example.walletssi.FragmentMenu1"
         android:label="FragmentMenu1"
-        tools:layout="@layout/fragment_menu1" />
+        tools:layout="@layout/fragment_menu1" >
+
+        <action
+            android:id="@+id/action_fragmentMenu1_to_fragmentScan"
+            app:destination="@id/fragmentScan" />
+
+    </fragment>
 
     <fragment
         android:id="@+id/fragmentCredencial"
         android:name="com.example.walletssi.FragmentCredencial"
         android:label="FragmentCredencial"
-        tools:layout="@layout/fragment_credencial" />
+        tools:layout="@layout/fragment_credencial" >
+        <action
+            android:id="@+id/action_fragmentCredencial_to_fragmentQr"
+            app:destination="@id/fragmentQr" />
+    </fragment>
 
     <action
         android:id="@+id/action_menu1_to_credencial"
@@ -24,5 +34,17 @@
     <action
         android:id="@+id/action_credencial_to_menu1"
         app:destination="@id/fragmentMenu1" />
+
+    <fragment
+        android:id="@+id/fragmentScan"
+        android:name="com.example.walletssi.FragmentScan"
+        android:label="fragment_scan"
+        tools:layout="@layout/fragment_scan" />
+
+    <fragment
+        android:id="@+id/fragmentQr"
+        android:name="com.example.walletssi.FragmentQr"
+        android:label="fragment_qr"
+        tools:layout="@layout/fragment_qr" />
 
 </navigation>

@@ -7,6 +7,8 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import androidx.navigation.Navigation;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -58,7 +60,28 @@ public class FragmentCredencial extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_credencial, container, false);
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        Button botonEnviar = view.findViewById(R.id.boton_enviar); // Reemplaza con el ID de tu botón "Enviar"
+        if (botonEnviar != null) {
+            botonEnviar.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // Verificar si todos los datos están seleccionados
+                    boolean datosSeleccionados = true;
+
+                    if (datosSeleccionados) {
+                        Navigation.findNavController(v).navigate(R.id.action_fragmentCredencial_to_fragmentQr);
+                    } else {
+
+                    }
+                }
+            });
+        }
     }
 }

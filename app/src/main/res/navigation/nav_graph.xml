@@ -3,13 +3,17 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/activityBienvenida">
+    app:startDestination="@id/fragmentInicioSesion2">
 
     <fragment
         android:id="@+id/fragmentInicioSesion2"
         android:name="com.example.walletssi.FragmentInicioSesion"
         android:label="fragment_inicio_sesion"
-        tools:layout="@layout/fragment_inicio_sesion" />
+        tools:layout="@layout/fragment_inicio_sesion" >
+        <action
+            android:id="@+id/action_fragmentInicioSesion2_to_fragmentRegistro2"
+            app:destination="@id/fragmentRegistro2" />
+    </fragment>
     <fragment
         android:id="@+id/fragmentRegistro2"
         android:name="com.example.walletssi.FragmentRegistro"
