@@ -21,9 +21,9 @@ public class ActivityBienvenida extends AppCompatActivity {
             botonIniciarSesion.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(ActivityBienvenida.this, ActivityAutenticacion.class);
-                    intent.putExtra("mostrar_fragment", "inicio_sesion");
-                    startActivity(intent);
+                    Intent intentInicioSesion = new Intent(ActivityBienvenida.this, ActivityAutenticacion.class);
+                    intentInicioSesion.putExtra("mostrar_fragment", "inicio_sesion");
+                    startActivity(intentInicioSesion);
                 }
             });
         }
@@ -32,9 +32,9 @@ public class ActivityBienvenida extends AppCompatActivity {
             botonRegistrar.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(ActivityBienvenida.this, ActivityAutenticacion.class);
-                    intent.putExtra("mostrar_fragment", "registro");
-                    startActivity(intent);
+                    Intent intentRegistro = new Intent(ActivityBienvenida.this, ActivityAutenticacion.class);
+                    intentRegistro.putExtra("mostrar_fragment", "registro");
+                    startActivity(intentRegistro);
                 }
             });
         }

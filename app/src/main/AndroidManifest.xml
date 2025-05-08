@@ -17,8 +17,6 @@
             android:name=".ActivityMenuPrincipal"
             android:exported="false" />
 
-
-
         <activity
             android:name=".ActivityAutenticacion"
             android:exported="false" />
