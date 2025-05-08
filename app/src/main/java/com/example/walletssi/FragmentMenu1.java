@@ -29,6 +29,7 @@ public class FragmentMenu1 extends Fragment implements View.OnClickListener {
     private CardView cardViewCredencial2;
     private ImageView imageViewOptionsCredencial1;
     private ImageView imageViewOptionsCredencial2;
+    private ImageView imageViewBuscar;
     private NavController navController;
     private CardView selectedCardView = null; // Para rastrear la CardView seleccionada
 
@@ -86,12 +87,15 @@ public class FragmentMenu1 extends Fragment implements View.OnClickListener {
         cardViewCredencial2 = view.findViewById(R.id.cardViewCredencial2);
         imageViewOptionsCredencial1 = view.findViewById(R.id.imageViewOptionsCredencial1);
         imageViewOptionsCredencial2 = view.findViewById(R.id.imageViewOptionsCredencial2);
+        imageViewBuscar = view.findViewById(R.id.imageViewBuscar);
 
         imageViewOptionsCredencial1.setOnClickListener(this::showPopupMenu);
         imageViewOptionsCredencial2.setOnClickListener(this::showPopupMenu);
 
         cardViewCredencial1.setOnClickListener(this);
         cardViewCredencial2.setOnClickListener(this);
+
+        imageViewBuscar.setOnClickListener(v -> mostrarTodasCredenciales()); // Establecer OnClickListener
 
         Button botonAñadir = view.findViewById(R.id.boton_menu_1_add); // ID botón "añadir"
         if (botonAñadir != null) {
@@ -142,6 +146,22 @@ public class FragmentMenu1 extends Fragment implements View.OnClickListener {
             cardView.setVisibility(View.GONE);
             Toast.makeText(requireContext(), "Credencial oculta", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private void mostrarTodasCredenciales() {
+        // Hacer visible la CardView 1
+        if (cardViewCredencial1 != null) {
+            cardViewCredencial1.setVisibility(View.VISIBLE);
+        }
+
+        // Hacer visible la CardView 2
+        if (cardViewCredencial2 != null) {
+            cardViewCredencial2.setVisibility(View.VISIBLE);
+        }
+
+        // ... Haz lo mismo para cualquier otra CardView de credencial que tengas ...
+
+        Toast.makeText(requireContext(), "Mostrando todas las credenciales", Toast.LENGTH_SHORT).show();
     }
 
     @Override

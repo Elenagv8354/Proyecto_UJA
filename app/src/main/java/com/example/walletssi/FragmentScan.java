@@ -8,57 +8,108 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
+import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+
+import com.journeyapps.barcodescanner.BarcodeCallback;
+import com.journeyapps.barcodescanner.BarcodeResult;
+import com.journeyapps.barcodescanner.BarcodeView;
+
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link FragmentScan#newInstance} factory method to
+ * Use the {@link FragmentScan} factory method to
  * create an instance of this fragment.
  */
 public class FragmentScan extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private static final int CAMERA_PERMISSION_REQUEST_CODE = 101; // Usar un código diferente si ya usaste 100
+    private BarcodeView barcodeView;
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private final BarcodeCallback callback = new BarcodeCallback() {
+        @Override
+        public void barcodeResult(BarcodeResult result) {
+            if (result.getText() != null) {
+                // Aquí tienes el resultado del escaneo (texto del código)
+                Toast.makeText(requireContext(), "Resultado: " + result.getText(), Toast.LENGTH_LONG).show();
+                // Puedes detener el escaneo si solo necesitas un resultado
+                // barcodeView.stopDecoding();
+            }
+        }
+
+        @Override
+        public void possibleResultPoints(java.util.List resultPoints) {
+            // Puedes implementar lógica para mostrar puntos de detección si lo deseas
+        }
+    };
 
     public FragmentScan() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment FragmentScan.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static FragmentScan newInstance(String param1, String param2) {
-        FragmentScan fragment = new FragmentScan();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_scan, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        barcodeView = view.findViewById(R.id.barcode_view);
+
+        // Verificar y solicitar permiso de cámara si no está concedido
+        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(requireActivity(),
+                    new String[]{Manifest.permission.CAMERA},
+                    CAMERA_PERMISSION_REQUEST_CODE);
+        } else {
+            // El permiso ya está concedido, iniciar el escaneo
+            startScanning();
+        }
+    }
+
+    private void startScanning() {
+        barcodeView.decodeContinuous(callback);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        // Iniciar la cámara en onResume
+        if (barcodeView != null) {
+            barcodeView.resume();
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        // Pausar la cámara en onPause
+        if (barcodeView != null) {
+            barcodeView.pause();
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == CAMERA_PERMISSION_REQUEST_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permiso de cámara concedido, iniciar el escaneo
+                startScanning();
+            } else {
+                Toast.makeText(requireContext(), "Permiso de cámara necesario", Toast.LENGTH_SHORT).show();
+                // Puedes mostrar un mensaje o navegar a otra pantalla si el permiso es denegado
+            }
+        }
     }
 }

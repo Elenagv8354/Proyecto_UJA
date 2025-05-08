@@ -52,22 +52,24 @@
             android:textStyle="bold" />
 
         <FrameLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/frameLayoutScanner"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_marginTop="32dp">
 
-            <View
-                android:id="@+id/viewFinder"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="#808080"
-                tools:background="@android:color/darker_gray" />
+            <com.journeyapps.barcodescanner.BarcodeView
+                android:id="@+id/barcode_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/escanear2"
-                app:tint="#000" />
+            <com.journeyapps.barcodescanner.ViewfinderView
+                android:id="@+id/viewfinder_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+
         </FrameLayout>
 
         <TextView
