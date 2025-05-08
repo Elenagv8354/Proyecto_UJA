@@ -14,7 +14,8 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:defaultNavHost="true"
-        app:navGraph="@navigation/menu_principal_nav_graph" app:layout_constraintTop_toTopOf="parent"
+        app:navGraph="@navigation/menu_principal_nav_graph"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent" />

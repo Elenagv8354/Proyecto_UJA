@@ -86,6 +86,7 @@
                     android:orientation="horizontal">
 
                     <androidx.cardview.widget.CardView
+                        android:id="@+id/cardViewCredencial1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="8dp">
@@ -110,6 +111,7 @@
                                 android:textSize="16sp" />
 
                             <ImageView
+                                android:id="@+id/imageViewOptionsCredencial1"
                                 android:layout_width="80dp"
                                 android:layout_height="30dp"
                                 android:layout_gravity="end"
@@ -122,6 +124,7 @@
                     </androidx.cardview.widget.CardView>
 
                     <androidx.cardview.widget.CardView
+                        android:id="@+id/cardViewCredencial2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp">
@@ -146,6 +149,7 @@
                                 android:textSize="16sp" />
 
                             <ImageView
+                                android:id="@+id/imageViewOptionsCredencial2"
                                 android:layout_width="80dp"
                                 android:layout_height="30dp"
                                 android:layout_gravity="end"

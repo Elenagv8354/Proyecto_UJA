@@ -9,6 +9,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import androidx.navigation.Navigation;
+import android.widget.ImageView;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.navigation.NavController;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -22,7 +27,9 @@ public class FragmentCredencial extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
+    private ImageView imageViewBack;
+    private NavController navController;
+    private Button botonEnviar; // Referencia al botón "Enviar"
     private String mParam1;
     private String mParam2;
 
@@ -38,7 +45,6 @@ public class FragmentCredencial extends Fragment {
      * @param param2 Parameter 2.
      * @return A new instance of fragment FragmentCredencial.
      */
-    // TODO: Rename and change types and number of parameters
     public static FragmentCredencial newInstance(String param1, String param2) {
         FragmentCredencial fragment = new FragmentCredencial();
         Bundle args = new Bundle();
@@ -57,29 +63,37 @@ public class FragmentCredencial extends Fragment {
         }
     }
 
+    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_credencial, container, false);
     }
 
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        navController = Navigation.findNavController(view);
 
-        Button botonEnviar = view.findViewById(R.id.boton_enviar); // Reemplaza con el ID de tu botón "Enviar"
+        imageViewBack = view.findViewById(R.id.imageViewBack);
+        imageViewBack.setOnClickListener(v -> {
+            // Utiliza navigateUp() para volver a la pantalla anterior en la pila de navegación
+            navController.navigateUp();
+            // Alternativamente, puedes navegar directamente al FragmentMenu1 usando su ID:
+            // navController.navigate(R.id.fragmentMenu1);
+        });
+
+        botonEnviar = view.findViewById(R.id.boton_enviar); // Reemplaza con el ID de tu botón "Enviar"
         if (botonEnviar != null) {
-            botonEnviar.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    // Verificar si todos los datos están seleccionados
-                    boolean datosSeleccionados = true;
+            botonEnviar.setOnClickListener(v -> {
+                // Verificar si todos los datos están seleccionados
+                boolean datosSeleccionados = true; // Reemplaza con tu lógica de verificación
 
-                    if (datosSeleccionados) {
-                        Navigation.findNavController(v).navigate(R.id.action_fragmentCredencial_to_fragmentQr);
-                    } else {
-
-                    }
+                if (datosSeleccionados) {
+                    Navigation.findNavController(v).navigate(R.id.action_fragmentCredencial_to_fragmentQr);
+                } else {
+                    // Aquí puedes mostrar un mensaje al usuario indicando que faltan datos
+                    // Por ejemplo: Toast.makeText(getContext(), "Por favor, selecciona todos los datos.", Toast.LENGTH_SHORT).show();
                 }
             });
         }
