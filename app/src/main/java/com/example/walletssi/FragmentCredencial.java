@@ -14,6 +14,13 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.navigation.NavController;
 
+import android.widget.CheckBox;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -29,7 +36,7 @@ public class FragmentCredencial extends Fragment {
 
     private ImageView imageViewBack;
     private NavController navController;
-    private Button botonEnviar; // Referencia al botón "Enviar"
+    private Button botonEnviar;
     private String mParam1;
     private String mParam2;
 
@@ -37,14 +44,6 @@ public class FragmentCredencial extends Fragment {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment FragmentCredencial.
-     */
     public static FragmentCredencial newInstance(String param1, String param2) {
         FragmentCredencial fragment = new FragmentCredencial();
         Bundle args = new Bundle();
@@ -66,7 +65,6 @@ public class FragmentCredencial extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_credencial, container, false);
     }
 
@@ -76,26 +74,37 @@ public class FragmentCredencial extends Fragment {
         navController = Navigation.findNavController(view);
 
         imageViewBack = view.findViewById(R.id.imageViewBack);
-        imageViewBack.setOnClickListener(v -> {
-            // Utiliza navigateUp() para volver a la pantalla anterior en la pila de navegación
-            navController.navigateUp();
-            // Alternativamente, puedes navegar directamente al FragmentMenu1 usando su ID:
-            // navController.navigate(R.id.fragmentMenu1);
-        });
+        imageViewBack.setOnClickListener(v -> navController.navigateUp());
 
-        botonEnviar = view.findViewById(R.id.boton_enviar); // Reemplaza con el ID de tu botón "Enviar"
+        botonEnviar = view.findViewById(R.id.boton_enviar);
         if (botonEnviar != null) {
             botonEnviar.setOnClickListener(v -> {
-                // Verificar si todos los datos están seleccionados
-                boolean datosSeleccionados = true; // Reemplaza con tu lógica de verificación
+                List<String> datosSeleccionados = obtenerDatosSeleccionados(view);
 
-                if (datosSeleccionados) {
-                    Navigation.findNavController(v).navigate(R.id.action_fragmentCredencial_to_fragmentQr);
+                if (!datosSeleccionados.isEmpty()) {
+                    Bundle bundle = new Bundle();
+                    bundle.putStringArrayList("datos", (ArrayList<String>) datosSeleccionados);
+                    navController.navigate(R.id.action_fragmentCredencial_to_fragmentQr, bundle);
                 } else {
-                    // Aquí puedes mostrar un mensaje al usuario indicando que faltan datos
-                    // Por ejemplo: Toast.makeText(getContext(), "Por favor, selecciona todos los datos.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(requireContext(), "Por favor, selecciona al menos un dato.", Toast.LENGTH_SHORT).show();
                 }
             });
         }
+    }
+
+    private List<String> obtenerDatosSeleccionados(View rootView) {
+        List<String> seleccionados = new ArrayList<>();
+        for (int i = 0; i < ((ViewGroup) rootView).getChildCount(); i++) {
+            View child = ((ViewGroup) rootView).getChildAt(i);
+            if (child instanceof LinearLayout) {
+                CheckBox checkBox = child.findViewById(R.id.checkBoxDato1); // Asume que el ID del CheckBox es checkBoxDato1
+                TextView textViewDato = child.findViewById(android.R.id.text1); // Asume que el TextView del dato tiene el ID text1
+
+                if (checkBox != null && textViewDato != null && checkBox.isChecked()) {
+                    seleccionados.add(textViewDato.getText().toString());
+                }
+            }
+        }
+        return seleccionados;
     }
 }
