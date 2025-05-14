@@ -41,7 +41,7 @@ public class FragmentQr extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        imageViewQrCode = view.findViewById(R.id.imageViewQrCode); // Asegúrate de tener un ImageView con este ID en fragment_qr.xml
+        imageViewQrCode = view.findViewById(R.id.imageViewQrCode);
 
         // Recibir los datos seleccionados del Fragment anterior
         Bundle args = getArguments();

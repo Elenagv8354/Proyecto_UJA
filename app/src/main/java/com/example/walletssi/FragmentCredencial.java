@@ -97,8 +97,8 @@ public class FragmentCredencial extends Fragment {
         for (int i = 0; i < ((ViewGroup) rootView).getChildCount(); i++) {
             View child = ((ViewGroup) rootView).getChildAt(i);
             if (child instanceof LinearLayout) {
-                CheckBox checkBox = child.findViewById(R.id.checkBoxDato1); // Asume que el ID del CheckBox es checkBoxDato1
-                TextView textViewDato = child.findViewById(android.R.id.text1); // Asume que el TextView del dato tiene el ID text1
+                CheckBox checkBox = child.findViewById(R.id.checkBoxDato1);
+                TextView textViewDato = child.findViewById(android.R.id.text1);
 
                 if (checkBox != null && textViewDato != null && checkBox.isChecked()) {
                     seleccionados.add(textViewDato.getText().toString());

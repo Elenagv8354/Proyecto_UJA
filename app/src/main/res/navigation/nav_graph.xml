@@ -18,5 +18,9 @@
         android:id="@+id/fragmentRegistro2"
         android:name="com.example.walletssi.FragmentRegistro"
         android:label="fragment_registro"
-        tools:layout="@layout/fragment_registro" />
+        tools:layout="@layout/fragment_registro" >
+        <action
+            android:id="@+id/action_fragmentRegistro2_to_fragmentInicioSesion2"
+            app:destination="@id/fragmentInicioSesion2" />
+    </fragment>
 </navigation>

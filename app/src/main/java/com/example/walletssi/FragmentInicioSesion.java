@@ -12,43 +12,33 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.util.Log;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link FragmentInicioSesion#newInstance} factory method to
+ * Use the {@link FragmentInicioSesion#} factory method to
  * create an instance of this fragment.
  */
 public class FragmentInicioSesion extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private EditText editTextUsuario;
+    private EditText editTextContrasena;
+    private Button botonIniciarSesion;
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private static final String PREFS_USUARIO = "prefs_usuario";
+    private static final String KEY_USUARIO = "usuario";
+    private static final String KEY_CONTRASENA = "contrasena";
 
     public FragmentInicioSesion() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment FragmentInicioSesion.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static FragmentInicioSesion newInstance(String param1, String param2) {
-        FragmentInicioSesion fragment = new FragmentInicioSesion();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -57,29 +47,38 @@ public class FragmentInicioSesion extends Fragment {
     }
 
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        EditText editTextUsuario = view.findViewById(R.id.edit_usuario_email); // ID EditText de usuario
-        EditText editTextContrasena = view.findViewById(R.id.edit_contrasena); // ID EditText de contraseña
-        Button botonIniciarSesion = view.findViewById(R.id.boton_iniciar_sesion); // ID botón de inicio de sesión
+        editTextUsuario = view.findViewById(R.id.edit_usuario_email); // ID EditText de usuario
+        editTextContrasena = view.findViewById(R.id.edit_contrasena); // ID EditText de contraseña
+        botonIniciarSesion = view.findViewById(R.id.boton_iniciar_sesion); // ID botón de inicio de sesión
 
         if (botonIniciarSesion != null) {
-            botonIniciarSesion.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    String usuario = editTextUsuario.getText().toString();
-                    String contrasena = editTextContrasena.getText().toString();
+            botonIniciarSesion.setOnClickListener(v -> iniciarSesion());
+        }
+    }
 
-                    if (usuario.equals("usuario") && contrasena.equals("contrasena")) { // Ejemplo de autenticación exitosa
-                        Intent intent = new Intent(requireContext(), ActivityMenuPrincipal.class);
-                        startActivity(intent);
-                        requireActivity().finish(); // cerrar ActivityAutenticacion
-                    } else {
-                        Toast.makeText(requireContext(), "Credenciales incorrectas", Toast.LENGTH_SHORT).show();
-                    }
-                }
-            });
+    private void iniciarSesion() {
+        String usuarioIngresado = editTextUsuario.getText().toString().trim();
+        String contraseñaIngresada = editTextContrasena.getText().toString().trim();
+
+        SharedPreferences sharedPreferences = requireActivity().getSharedPreferences(PREFS_USUARIO, Context.MODE_PRIVATE);
+        String usuarioGuardado = sharedPreferences.getString(KEY_USUARIO, null);
+        String contraseñaGuardada = sharedPreferences.getString(KEY_CONTRASENA, null);
+
+        Log.d("InicioSesion", "Usuario Guardado: " + usuarioGuardado);
+        Log.d("InicioSesion", "Contraseña Guardada: " + contraseñaGuardada);
+        Log.d("InicioSesion", "Usuario Ingresado: " + usuarioIngresado);
+        Log.d("InicioSesion", "Contraseña Ingresada: " + contraseñaIngresada);
+
+        if (usuarioGuardado != null && contraseñaGuardada != null &&
+                usuarioIngresado.equals(usuarioGuardado) && contraseñaIngresada.equals(contraseñaGuardada)) {
+            Intent intent = new Intent(requireContext(), ActivityMenuPrincipal.class);
+            startActivity(intent);
+            requireActivity().finish(); // cerrar ActivityAutenticacion
+        } else {
+            Toast.makeText(requireContext(), "Credenciales incorrectas", Toast.LENGTH_SHORT).show();
         }
     }
 }
