@@ -2,4 +2,7 @@
     <string name="app_name">WalletSSI</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="icono_usuario">Icono de usuario. Toca para ver el menú de perfil.</string>
+    <string name="boton_home">Ir a la pantalla principal.</string>
+    <string name="boton_añadir">Añadir nueva credencial.</string>
 </resources>

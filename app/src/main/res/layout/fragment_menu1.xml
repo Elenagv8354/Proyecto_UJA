@@ -16,9 +16,13 @@
         android:paddingHorizontal="16dp">
 
         <ImageView
+            android:id="@+id/imageViewUsuario"
             android:layout_width="80dp"
             android:layout_height="55dp"
-            android:src="@drawable/usuario" />
+            android:src="@drawable/usuario"
+            android:clickable="true"
+            android:focusable="true"
+            android:contentDescription="@string/icono_usuario"/>
 
         <View
             android:layout_width="0dp"
@@ -30,11 +34,11 @@
             android:layout_height="40dp"
             android:src="@drawable/notificacion" />
 
-        <ImageView
+        <!-- <ImageView
             android:layout_width="80dp"
             android:layout_height="40dp"
             android:layout_marginStart="16dp"
-            android:src="@drawable/config" />
+            android:src="@drawable/config" /> -->
 
     </LinearLayout>
 
@@ -199,24 +203,35 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
-            android:padding="16dp"
-            android:text="Home"
+            android:contentDescription="@string/boton_home"
+            android:drawablePadding="0dp"
+            android:text=""
             android:textAlignment="center"
             android:textColor="#000000"
             android:textSize="16sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            app:icon="@drawable/home"
+            app:iconPadding="0dp"
+            app:iconSize="40dp"
+            app:iconTint="#000000" />
 
         <Button
             android:id="@+id/boton_menu_1_add"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:padding="16dp"
-            android:text="Añadir"
+            android:contentDescription="@string/boton_añadir"
+            android:drawablePadding="0dp"
+            android:paddingLeft="28dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:text=""
             android:textAlignment="center"
             android:textColor="#000000"
             android:textSize="16sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            app:icon="@drawable/anadir"
+            app:iconSize="30dp"
+            app:iconTint="#000000" />
 
     </LinearLayout>
 

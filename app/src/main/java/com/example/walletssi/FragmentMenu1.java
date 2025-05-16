@@ -1,10 +1,12 @@
 package com.example.walletssi;
 
+import android.app.AlertDialog;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -30,6 +32,7 @@ public class FragmentMenu1 extends Fragment implements View.OnClickListener {
     private ImageView imageViewOptionsCredencial1;
     private ImageView imageViewOptionsCredencial2;
     private ImageView imageViewBuscar;
+    private ImageView imageViewUsuario; // Nueva ImageView del usuario
     private NavController navController;
     private CardView selectedCardView = null; // Para rastrear la CardView seleccionada
 
@@ -83,55 +86,87 @@ public class FragmentMenu1 extends Fragment implements View.OnClickListener {
         super.onViewCreated(view, savedInstanceState);
         navController = Navigation.findNavController(view);
 
+        // Inicializar todas las vistas
+        imageViewUsuario = view.findViewById(R.id.imageViewUsuario);
         cardViewCredencial1 = view.findViewById(R.id.cardViewCredencial1);
         cardViewCredencial2 = view.findViewById(R.id.cardViewCredencial2);
         imageViewOptionsCredencial1 = view.findViewById(R.id.imageViewOptionsCredencial1);
         imageViewOptionsCredencial2 = view.findViewById(R.id.imageViewOptionsCredencial2);
         imageViewBuscar = view.findViewById(R.id.imageViewBuscar);
 
-        imageViewOptionsCredencial1.setOnClickListener(this::showPopupMenu);
-        imageViewOptionsCredencial2.setOnClickListener(this::showPopupMenu);
-
+        // Establecer los OnClickListener para cada vista
+        imageViewUsuario.setOnClickListener(v -> mostrarPopupMenuUsuario(v)); // Usa un método diferente para el menú de usuario
+        imageViewOptionsCredencial1.setOnClickListener(this::showPopupMenuCredencial);
+        imageViewOptionsCredencial2.setOnClickListener(this::showPopupMenuCredencial);
         cardViewCredencial1.setOnClickListener(this);
         cardViewCredencial2.setOnClickListener(this);
+        imageViewBuscar.setOnClickListener(v -> mostrarTodasCredenciales());
 
-        imageViewBuscar.setOnClickListener(v -> mostrarTodasCredenciales()); // Establecer OnClickListener
-
-        Button botonAñadir = view.findViewById(R.id.boton_menu_1_add); // ID botón "añadir"
+        Button botonAñadir = view.findViewById(R.id.boton_menu_1_add);
         if (botonAñadir != null) {
             botonAñadir.setOnClickListener(v -> Navigation.findNavController(v).navigate(R.id.action_fragmentMenu1_to_fragmentScan));
         }
     }
 
-    private void showPopupMenu(View view) {
+    private void mostrarPopupMenuUsuario(View view) {
         PopupMenu popupMenu = new PopupMenu(requireContext(), view);
-
-        // Añadir elementos al menú directamente en el código
-        popupMenu.getMenu().add(0, 1, 0, "Eliminar"); // groupId, itemId, order, title
-        popupMenu.getMenu().add(0, 2, 0, "Ocultar");
+        popupMenu.getMenuInflater().inflate(R.menu.menu_perfil, popupMenu.getMenu());
 
         popupMenu.setOnMenuItemClickListener(item -> {
             int itemId = item.getItemId();
-            if (itemId == 1) { // ID para "Eliminar"
-                // Implementa la lógica para eliminar la CardView asociada
-                if (view.getId() == R.id.imageViewOptionsCredencial1) {
-                    eliminarCredencial(cardViewCredencial1);
-                } else if (view.getId() == R.id.imageViewOptionsCredencial2) {
-                    eliminarCredencial(cardViewCredencial2);
-                }
+            if (itemId == R.id.action_perfil) {
+                Toast.makeText(requireContext(), "Perfil seleccionado", Toast.LENGTH_SHORT).show();
                 return true;
-            } else if (itemId == 2) { // ID para "Ocultar"
-                // Implementa la lógica para ocultar la CardView asociada
-                if (view.getId() == R.id.imageViewOptionsCredencial1) {
-                    ocultarCredencial(cardViewCredencial1);
-                } else if (view.getId() == R.id.imageViewOptionsCredencial2) {
-                    ocultarCredencial(cardViewCredencial2);
-                }
+            } else if (itemId == R.id.action_ajustes) {
+                Toast.makeText(requireContext(), "Ajustes seleccionados", Toast.LENGTH_SHORT).show();
+                return true;
+            } else if (itemId == R.id.action_cerrar_sesion) {
+                Toast.makeText(requireContext(), "Cerrar sesión seleccionado", Toast.LENGTH_SHORT).show();
                 return true;
             }
             return false;
         });
         popupMenu.show();
+    }
+
+    private void showPopupMenuCredencial(View view) {
+        PopupMenu popupMenu = new PopupMenu(requireContext(), view);
+        popupMenu.getMenu().add(0, 1, 0, "Eliminar");
+        popupMenu.getMenu().add(0, 2, 0, "Ocultar");
+
+        popupMenu.setOnMenuItemClickListener(item -> {
+            int itemId = item.getItemId();
+            if (itemId == 1) { // Eliminar
+                mostrarDialogoConfirmacion("¿Seguro que quieres eliminar esta credencial?", () -> {
+                    if (view.getId() == R.id.imageViewOptionsCredencial1) {
+                        eliminarCredencial(cardViewCredencial1);
+                    } else if (view.getId() == R.id.imageViewOptionsCredencial2) {
+                        eliminarCredencial(cardViewCredencial2);
+                    }
+                });
+                return true;
+            } else if (itemId == 2) { // Ocultar
+                mostrarDialogoConfirmacion("¿Seguro que quieres ocultar esta credencial?", () -> {
+                    if (view.getId() == R.id.imageViewOptionsCredencial1) {
+                        ocultarCredencial(cardViewCredencial1);
+                    } else if (view.getId() == R.id.imageViewOptionsCredencial2) {
+                        ocultarCredencial(cardViewCredencial2);
+                    }
+                });
+                return true;
+            }
+            return false;
+        });
+        popupMenu.show();
+    }
+
+
+    private void mostrarDialogoConfirmacion(String mensaje, Runnable accionConfirmar) {
+        new AlertDialog.Builder(requireContext())
+                .setMessage(mensaje)
+                .setPositiveButton("Aceptar", (dialog, which) -> accionConfirmar.run())
+                .setNegativeButton("Cancelar", null)
+                .show();
     }
 
     private void eliminarCredencial(CardView cardView) {
