@@ -21,63 +21,49 @@ import androidx.navigation.NavController;
 import android.widget.PopupMenu;
 import android.widget.Toast;
 
+import android.content.Context;
+import android.graphics.drawable.ColorDrawable;
+
+import android.view.Gravity;
+
+import android.widget.PopupWindow;
+import android.widget.TextView;
+
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link FragmentMenu1#newInstance} factory method to
+ * Use the {@link FragmentMenu1#} factory method to
  * create an instance of this fragment.
  */
-public class FragmentMenu1 extends Fragment implements View.OnClickListener {
+public class FragmentMenu1 extends Fragment implements View.OnClickListener, CredencialAdapter.OnRestaurarClickListener {
     private CardView cardViewCredencial1;
     private CardView cardViewCredencial2;
     private ImageView imageViewOptionsCredencial1;
     private ImageView imageViewOptionsCredencial2;
     private ImageView imageViewBuscar;
-    private ImageView imageViewUsuario; // Nueva ImageView del usuario
+    private ImageView imageViewUsuario;
     private NavController navController;
-    private CardView selectedCardView = null; // Para rastrear la CardView seleccionada
+    private CardView selectedCardView = null;
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    private String mParam1;
-    private String mParam2;
+    private List<Credencial> listaCredenciales = new ArrayList<>();
 
     public FragmentMenu1() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment FragmentMenu1.
-     */
-    public static FragmentMenu1 newInstance(String param1, String param2) {
-        FragmentMenu1 fragment = new FragmentMenu1();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
-    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_menu1, container, false);
     }
 
@@ -86,45 +72,37 @@ public class FragmentMenu1 extends Fragment implements View.OnClickListener {
         super.onViewCreated(view, savedInstanceState);
         navController = Navigation.findNavController(view);
 
-        // Inicializar todas las vistas
         imageViewUsuario = view.findViewById(R.id.imageViewUsuario);
-        cardViewCredencial1 = view.findViewById(R.id.cardViewCredencial1);
-        cardViewCredencial2 = view.findViewById(R.id.cardViewCredencial2);
+        cardViewCredencial1 = view.findViewById(R.id.CV1);
+        cardViewCredencial2 = view.findViewById(R.id.CV2);
         imageViewOptionsCredencial1 = view.findViewById(R.id.imageViewOptionsCredencial1);
         imageViewOptionsCredencial2 = view.findViewById(R.id.imageViewOptionsCredencial2);
         imageViewBuscar = view.findViewById(R.id.imageViewBuscar);
 
-        // Establecer los OnClickListener para cada vista
-        imageViewUsuario.setOnClickListener(v -> mostrarPopupMenuUsuario(v)); // Usa un método diferente para el menú de usuario
+        imageViewUsuario.setOnClickListener(v -> mostrarPopupMenuUsuario(v));
         imageViewOptionsCredencial1.setOnClickListener(this::showPopupMenuCredencial);
         imageViewOptionsCredencial2.setOnClickListener(this::showPopupMenuCredencial);
         cardViewCredencial1.setOnClickListener(this);
         cardViewCredencial2.setOnClickListener(this);
-        imageViewBuscar.setOnClickListener(v -> mostrarTodasCredenciales());
+        imageViewBuscar.setOnClickListener(this::mostrarPopupListaCredenciales);
 
         Button botonAñadir = view.findViewById(R.id.boton_menu_1_add);
         if (botonAñadir != null) {
             botonAñadir.setOnClickListener(v -> Navigation.findNavController(v).navigate(R.id.action_fragmentMenu1_to_fragmentScan));
         }
+
+        // Inicialización de la lista de credenciales (asegúrate de que los nombres coincidan con tus CardViews)
+        listaCredenciales.add(new Credencial("CV1", false));
+        listaCredenciales.add(new Credencial("CV2", false));
+        // ... añade más credenciales según tus CardViews ...
     }
 
     private void mostrarPopupMenuUsuario(View view) {
         PopupMenu popupMenu = new PopupMenu(requireContext(), view);
         popupMenu.getMenuInflater().inflate(R.menu.menu_perfil, popupMenu.getMenu());
-
         popupMenu.setOnMenuItemClickListener(item -> {
-            int itemId = item.getItemId();
-            if (itemId == R.id.action_perfil) {
-                Toast.makeText(requireContext(), "Perfil seleccionado", Toast.LENGTH_SHORT).show();
-                return true;
-            } else if (itemId == R.id.action_ajustes) {
-                Toast.makeText(requireContext(), "Ajustes seleccionados", Toast.LENGTH_SHORT).show();
-                return true;
-            } else if (itemId == R.id.action_cerrar_sesion) {
-                Toast.makeText(requireContext(), "Cerrar sesión seleccionado", Toast.LENGTH_SHORT).show();
-                return true;
-            }
-            return false;
+            // ... (tu lógica del menú de usuario) ...
+            return true;
         });
         popupMenu.show();
     }
@@ -133,26 +111,13 @@ public class FragmentMenu1 extends Fragment implements View.OnClickListener {
         PopupMenu popupMenu = new PopupMenu(requireContext(), view);
         popupMenu.getMenu().add(0, 1, 0, "Eliminar");
         popupMenu.getMenu().add(0, 2, 0, "Ocultar");
-
         popupMenu.setOnMenuItemClickListener(item -> {
             int itemId = item.getItemId();
             if (itemId == 1) { // Eliminar
-                mostrarDialogoConfirmacion("¿Seguro que quieres eliminar esta credencial?", () -> {
-                    if (view.getId() == R.id.imageViewOptionsCredencial1) {
-                        eliminarCredencial(cardViewCredencial1);
-                    } else if (view.getId() == R.id.imageViewOptionsCredencial2) {
-                        eliminarCredencial(cardViewCredencial2);
-                    }
-                });
+                mostrarDialogoConfirmacion("¿Seguro que quieres eliminar esta credencial?", () -> eliminarCredencial(view));
                 return true;
             } else if (itemId == 2) { // Ocultar
-                mostrarDialogoConfirmacion("¿Seguro que quieres ocultar esta credencial?", () -> {
-                    if (view.getId() == R.id.imageViewOptionsCredencial1) {
-                        ocultarCredencial(cardViewCredencial1);
-                    } else if (view.getId() == R.id.imageViewOptionsCredencial2) {
-                        ocultarCredencial(cardViewCredencial2);
-                    }
-                });
+                ocultarCredencial(view);
                 return true;
             }
             return false;
@@ -160,6 +125,56 @@ public class FragmentMenu1 extends Fragment implements View.OnClickListener {
         popupMenu.show();
     }
 
+    private void mostrarPopupListaCredenciales(View anchorView) {
+        LayoutInflater inflater = (LayoutInflater) requireContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View popupView = inflater.inflate(R.layout.popup_credenciales, null);
+
+        PopupWindow popupWindow = new PopupWindow(popupView, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
+        popupWindow.setOutsideTouchable(true);
+        popupWindow.setFocusable(true);
+        popupWindow.setBackgroundDrawable(new ColorDrawable(android.graphics.Color.WHITE));
+
+        RecyclerView recyclerViewPopup = popupView.findViewById(R.id.recyclerViewPopupCredenciales);
+        TextView textViewPopupListaVacia = popupView.findViewById(R.id.textViewPopupListaVacia);
+
+        recyclerViewPopup.setLayoutManager(new LinearLayoutManager(requireContext()));
+        CredencialAdapter popupAdapter = new CredencialAdapter(listaCredenciales, this);
+        recyclerViewPopup.setAdapter(popupAdapter);
+
+        if (listaCredenciales.isEmpty()) {
+            recyclerViewPopup.setVisibility(View.GONE);
+            textViewPopupListaVacia.setVisibility(View.VISIBLE);
+        } else {
+            recyclerViewPopup.setVisibility(View.VISIBLE);
+            textViewPopupListaVacia.setVisibility(View.GONE);
+        }
+
+        popupWindow.showAsDropDown(anchorView, 0, 0, Gravity.END);
+    }
+
+    @Override
+    public void onRestaurarClick(Credencial credencial) {
+        mostrarDialogoRestaurar(credencial);
+    }
+
+    private void mostrarDialogoRestaurar(Credencial credencial) {
+        new AlertDialog.Builder(requireContext())
+                .setMessage("¿Quieres mostrar la credencial '" + credencial.getNombre() + "'?")
+                .setPositiveButton("Sí", (dialog, which) -> {
+                    credencial.setOculta(false);
+                    // Actualizar la visibilidad de la CardView correspondiente
+                    if (credencial.getNombre().equals("CV1")) {
+                        cardViewCredencial1.setVisibility(View.VISIBLE);
+                    } else if (credencial.getNombre().equals("CV2")) {
+                        cardViewCredencial2.setVisibility(View.VISIBLE);
+                    }
+                    // Notificar al adaptador del popup que los datos han cambiado
+                    // Esto es importante para que el botón "Mostrar" desaparezca si la credencial ya no está oculta
+                    mostrarPopupListaCredenciales(imageViewBuscar); // Reabrir el popup para refrescar la lista
+                })
+                .setNegativeButton("No", null)
+                .show();
+    }
 
     private void mostrarDialogoConfirmacion(String mensaje, Runnable accionConfirmar) {
         new AlertDialog.Builder(requireContext())
@@ -169,60 +184,88 @@ public class FragmentMenu1 extends Fragment implements View.OnClickListener {
                 .show();
     }
 
-    private void eliminarCredencial(CardView cardView) {
-        if (cardView != null && cardView.getParent() instanceof ViewGroup) {
-            ((ViewGroup) cardView.getParent()).removeView(cardView);
+    private void eliminarCredencial(View viewOpciones) {
+        CardView cardViewToRemove = null;
+        String nombreCredencialToRemove = "";
+        if (viewOpciones.getId() == R.id.imageViewOptionsCredencial1) {
+            cardViewToRemove = cardViewCredencial1;
+            nombreCredencialToRemove = "CV1";
+        } else if (viewOpciones.getId() == R.id.imageViewOptionsCredencial2) {
+            cardViewToRemove = cardViewCredencial2;
+            nombreCredencialToRemove = "CV2";
+        }
+
+        if (cardViewToRemove != null && cardViewToRemove.getParent() instanceof ViewGroup) {
+            ((ViewGroup) cardViewToRemove.getParent()).removeView(cardViewToRemove);
+            // Eliminar la credencial de la lista
+            Iterator<Credencial> iterator = listaCredenciales.iterator();
+            while (iterator.hasNext()) {
+                Credencial credencial = iterator.next();
+                if (credencial.getNombre().equals(nombreCredencialToRemove)) {
+                    iterator.remove();
+                    break;
+                }
+            }
             Toast.makeText(requireContext(), "Credencial eliminada", Toast.LENGTH_SHORT).show();
+            mostrarPopupListaCredenciales(imageViewBuscar); // Refrescar la lista en el popup
         }
     }
 
-    private void ocultarCredencial(CardView cardView) {
-        if (cardView != null) {
-            cardView.setVisibility(View.GONE);
+    private void ocultarCredencial(View viewOpciones) {
+        CardView cardViewToHide = null;
+        String nombreCredencialToHide = "";
+        if (viewOpciones.getId() == R.id.imageViewOptionsCredencial1) {
+            cardViewToHide = cardViewCredencial1;
+            nombreCredencialToHide = "CV1";
+        } else if (viewOpciones.getId() == R.id.imageViewOptionsCredencial2) {
+            cardViewToHide = cardViewCredencial2;
+            nombreCredencialToHide = "CV2";
+        }
+
+        if (cardViewToHide != null) {
+            cardViewToHide.setVisibility(View.GONE);
+            // Actualizar el estado 'oculta' en la lista
+            for (Credencial c : listaCredenciales) {
+                if (c.getNombre().equals(nombreCredencialToHide)) {
+                    c.setOculta(true);
+                    break;
+                }
+            }
             Toast.makeText(requireContext(), "Credencial oculta", Toast.LENGTH_SHORT).show();
+            mostrarPopupListaCredenciales(imageViewBuscar); // Refrescar la lista en el popup
         }
     }
 
     private void mostrarTodasCredenciales() {
-        // Hacer visible la CardView 1
         if (cardViewCredencial1 != null) {
             cardViewCredencial1.setVisibility(View.VISIBLE);
         }
-
-        // Hacer visible la CardView 2
         if (cardViewCredencial2 != null) {
             cardViewCredencial2.setVisibility(View.VISIBLE);
         }
-
-        // ... Haz lo mismo para cualquier otra CardView de credencial que tengas ...
-
+        // También deberías actualizar el estado 'oculta' en la lista
+        for (Credencial c : listaCredenciales) {
+            c.setOculta(false);
+        }
+        mostrarPopupListaCredenciales(imageViewBuscar); // Refrescar la lista en el popup
         Toast.makeText(requireContext(), "Mostrando todas las credenciales", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onClick(View v) {
-        // Deseleccionar la CardView previamente seleccionada (si existe)
         if (selectedCardView != null) {
             resetCardViewBackground(selectedCardView);
         }
-
-        // Seleccionar la CardView actual
         selectedCardView = (CardView) v;
         setCardViewBackgroundSelected(selectedCardView);
-
-        // Navegar a FragmentCredencial (puedes pasar argumentos si es necesario)
         navController.navigate(R.id.action_menu1_to_credencial);
     }
 
     private void setCardViewBackgroundSelected(CardView cardView) {
-        // Cambia el color de fondo o algún otro atributo visual para indicar selección
         cardView.setCardBackgroundColor(getResources().getColor(R.color.colorCredencial, requireContext().getTheme()));
-        // Se puede cambiar la elevación, el borde, etc.
     }
 
     private void resetCardViewBackground(CardView cardView) {
-        // Restaura el color de fondo original u otros atributos
-        cardView.setCardBackgroundColor(getResources().getColor(android.R.color.white, requireContext().getTheme())); // Ejemplo de color blanco
-        // Restaura otros atributos a su estado original
+        cardView.setCardBackgroundColor(getResources().getColor(android.R.color.white, requireContext().getTheme()));
     }
 }

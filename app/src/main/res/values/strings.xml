@@ -5,4 +5,6 @@
     <string name="icono_usuario">Icono de usuario. Toca para ver el menú de perfil.</string>
     <string name="boton_home">Ir a la pantalla principal.</string>
     <string name="boton_añadir">Añadir nueva credencial.</string>
+    <string name="no_hay_credenciales">No hay credenciales</string>
+    <string name="buscar_credenciales">Buscar credenciales</string>
 </resources>
