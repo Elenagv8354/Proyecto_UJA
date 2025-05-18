@@ -95,6 +95,7 @@
                             android:layout_height="wrap_content" />
 
                         <LinearLayout
+                            android:id="@+id/linearLayoutTextoNombre"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="16dp"
@@ -110,6 +111,7 @@
                                 android:textStyle="bold" />
 
                             <TextView
+                                android:id="@+id/infoText1"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Elena García Valenzuela"
@@ -117,6 +119,17 @@
                                 android:textColor="#757575" />
 
                         </LinearLayout>
+
+                        <ImageView
+                            android:id="@+id/imageViewMostrarOcultarNombre"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginEnd="10dp"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:src="@drawable/mostrar"
+                            android:contentDescription="@string/descripcion_mostrar_ocultar_nombre"/>
 
                     </LinearLayout>
 
@@ -141,6 +154,7 @@
                             android:layout_height="wrap_content" />
 
                         <LinearLayout
+                            android:id="@+id/linearLayoutTextoDni"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="16dp"
@@ -156,6 +170,7 @@
                                 android:textStyle="bold" />
 
                             <TextView
+                                android:id="@+id/infoText2"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="82771927F"
@@ -163,6 +178,17 @@
                                 android:textColor="#757575" />
 
                         </LinearLayout>
+
+                        <ImageView
+                            android:id="@+id/imageViewMostrarOcultarDni"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginEnd="10dp"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:src="@drawable/mostrar"
+                            android:contentDescription="@string/descripcion_mostrar_ocultar_nombre"/>
 
                     </LinearLayout>
 
@@ -187,6 +213,7 @@
                             android:layout_height="wrap_content" />
 
                         <LinearLayout
+                            android:id="@+id/linearLayoutTextoNacimiento"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="16dp"
@@ -202,6 +229,7 @@
                                 android:textStyle="bold" />
 
                             <TextView
+                                android:id="@+id/infoText3"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="02/01/2003"
@@ -209,6 +237,17 @@
                                 android:textColor="#757575" />
 
                         </LinearLayout>
+
+                        <ImageView
+                            android:id="@+id/imageViewMostrarOcultarNacimiento"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginEnd="10dp"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:src="@drawable/mostrar"
+                            android:contentDescription="@string/descripcion_mostrar_ocultar_nombre"/>
 
                     </LinearLayout>
 
@@ -233,6 +272,7 @@
                             android:layout_height="wrap_content" />
 
                         <LinearLayout
+                            android:id="@+id/linearLayoutTextoTelefono"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="16dp"
@@ -248,6 +288,7 @@
                                 android:textStyle="bold" />
 
                             <TextView
+                                android:id="@+id/infoText4"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="816827697"
@@ -255,6 +296,17 @@
                                 android:textColor="#757575" />
 
                         </LinearLayout>
+
+                        <ImageView
+                            android:id="@+id/imageViewMostrarOcultarTelefono"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginEnd="10dp"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:src="@drawable/mostrar"
+                            android:contentDescription="@string/descripcion_mostrar_ocultar_nombre"/>
 
                     </LinearLayout>
 

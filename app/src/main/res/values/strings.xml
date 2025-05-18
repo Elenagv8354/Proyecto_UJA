@@ -7,4 +7,5 @@
     <string name="boton_añadir">Añadir nueva credencial.</string>
     <string name="no_hay_credenciales">No hay credenciales</string>
     <string name="buscar_credenciales">Buscar credenciales</string>
+    <string name="descripcion_mostrar_ocultar_nombre">Mostrar u ocultar el nombre completo</string>
 </resources>

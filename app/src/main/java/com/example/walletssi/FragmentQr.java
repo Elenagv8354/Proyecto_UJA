@@ -13,6 +13,8 @@ import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.MultiFormatWriter;
@@ -30,7 +32,9 @@ import java.util.ArrayList;
  */
 public class FragmentQr extends Fragment {
 
+    private ImageView imageViewBack;
     private ImageView imageViewQrCode;
+    private NavController navController;
 
     @Nullable
     @Override
@@ -41,7 +45,11 @@ public class FragmentQr extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        navController = Navigation.findNavController(view);
         imageViewQrCode = view.findViewById(R.id.imageViewQrCode);
+
+        imageViewBack = view.findViewById(R.id.imageViewBack);
+        imageViewBack.setOnClickListener(v -> navController.navigateUp());
 
         // Recibir los datos seleccionados del Fragment anterior
         Bundle args = getArguments();
