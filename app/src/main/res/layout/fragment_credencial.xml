@@ -313,8 +313,16 @@
                 </androidx.cardview.widget.CardView>
 
             </LinearLayout>
+            <ImageView
+                android:id="@+id/imageViewQrGuardado"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:visibility="gone" android:layout_marginTop="16dp" />
 
         </LinearLayout>
+
+
 
     </ScrollView>
 
