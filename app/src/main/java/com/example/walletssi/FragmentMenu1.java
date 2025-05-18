@@ -1,6 +1,7 @@
 package com.example.walletssi;
 
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -101,10 +102,34 @@ public class FragmentMenu1 extends Fragment implements View.OnClickListener, Cre
         PopupMenu popupMenu = new PopupMenu(requireContext(), view);
         popupMenu.getMenuInflater().inflate(R.menu.menu_perfil, popupMenu.getMenu());
         popupMenu.setOnMenuItemClickListener(item -> {
-            // ... (tu lógica del menú de usuario) ...
+            int itemId = item.getItemId();
+            // ... (tu lógica del menú de usuario existente) ...
+            if (itemId == R.id.action_cerrar_sesion) {
+                cerrarSesion();
+                return true;
+            }
             return true;
         });
         popupMenu.show();
+    }
+
+    private void cerrarSesion() {
+        // Aquí puedes añadir cualquier lógica adicional de limpieza o guardado de estado
+        // antes de cerrar la sesión.
+
+        // Crea un Intent para iniciar la Activity de inicio de sesión
+        Intent intent = new Intent(requireContext(), ActivityBienvenida.class);
+
+        // Opcional: Puedes añadir flags al Intent si necesitas limpiar la pila de actividades y evitar volver atrás
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
+        // Inicia la Activity de inicio de sesión
+        startActivity(intent);
+
+        // Finaliza la actividad actual (FragmentMenu1 Activity)
+        if (getActivity() != null) {
+            getActivity().finish();
+        }
     }
 
     private void showPopupMenuCredencial(View view) {
