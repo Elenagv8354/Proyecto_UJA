@@ -2,6 +2,7 @@ package com.example.walletssi;
 
 import android.os.Bundle;
 
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -24,45 +25,19 @@ import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link FragmentCredencial#newInstance} factory method to
+ * Use the {@link FragmentCredencial#} factory method to
  * create an instance of this fragment.
  */
 public class FragmentCredencial extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
     private ImageView imageViewBack;
     private NavController navController;
     private Button botonEnviar;
-    private String mParam1;
-    private String mParam2;
 
     public FragmentCredencial() {
         // Required empty public constructor
     }
 
-    public static FragmentCredencial newInstance(String param1, String param2) {
-        FragmentCredencial fragment = new FragmentCredencial();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
-
-    @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_credencial, container, false);
@@ -94,14 +69,24 @@ public class FragmentCredencial extends Fragment {
 
     private List<String> obtenerDatosSeleccionados(View rootView) {
         List<String> seleccionados = new ArrayList<>();
-        for (int i = 0; i < ((ViewGroup) rootView).getChildCount(); i++) {
-            View child = ((ViewGroup) rootView).getChildAt(i);
-            if (child instanceof LinearLayout) {
-                CheckBox checkBox = child.findViewById(R.id.checkBoxDato1);
-                TextView textViewDato = child.findViewById(android.R.id.text1);
+        LinearLayout linearLayoutInformacion = rootView.findViewById(R.id.linearLayoutInformacion); // ID del LinearLayout que contiene las CardViews
 
-                if (checkBox != null && textViewDato != null && checkBox.isChecked()) {
-                    seleccionados.add(textViewDato.getText().toString());
+        if (linearLayoutInformacion != null) {
+            for (int i = 0; i < linearLayoutInformacion.getChildCount(); i++) {
+                View cardViewChild = linearLayoutInformacion.getChildAt(i);
+                if (cardViewChild instanceof CardView) {
+                    LinearLayout linearLayoutDentroCard = (LinearLayout) ((CardView) cardViewChild).getChildAt(0); // Primer hijo de CardView es el LinearLayout horizontal
+                    if (linearLayoutDentroCard != null) {
+                        CheckBox checkBox = linearLayoutDentroCard.findViewById(R.id.checkBoxDato1); // ID común de tus CheckBox
+                        LinearLayout linearLayoutTexto = (LinearLayout) linearLayoutDentroCard.getChildAt(1); // Segundo hijo es el LinearLayout vertical del texto
+                        if (linearLayoutTexto != null) {
+                            TextView textViewDato = linearLayoutTexto.findViewById(R.id.text1); // ID común del TextView del dato
+
+                            if (checkBox != null && textViewDato != null && checkBox.isChecked()) {
+                                seleccionados.add(textViewDato.getText().toString());
+                            }
+                        }
+                    }
                 }
             }
         }

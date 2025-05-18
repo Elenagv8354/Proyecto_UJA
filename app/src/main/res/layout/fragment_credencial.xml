@@ -70,6 +70,7 @@
                 android:textStyle="bold" />
 
             <LinearLayout
+                android:id="@+id/linearLayoutInformacion"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
@@ -104,14 +105,14 @@
                                 android:id="@+id/text1"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Dato 1"
+                                android:text="Nombre completo"
                                 android:textSize="16sp"
                                 android:textStyle="bold" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Subhead"
+                                android:text="Elena García Valenzuela"
                                 android:textSize="14sp"
                                 android:textColor="#757575" />
 
@@ -147,16 +148,17 @@
                             android:orientation="vertical">
 
                             <TextView
+                                android:id="@+id/text2"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Dato 2"
+                                android:text="DNI"
                                 android:textSize="16sp"
                                 android:textStyle="bold" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Subhead"
+                                android:text="82771927F"
                                 android:textSize="14sp"
                                 android:textColor="#757575" />
 
@@ -192,16 +194,17 @@
                             android:orientation="vertical">
 
                             <TextView
+                                android:id="@+id/text3"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Dato 3"
+                                android:text="Fecha nacimiento"
                                 android:textSize="16sp"
                                 android:textStyle="bold" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Subhead"
+                                android:text="02/01/2003"
                                 android:textSize="14sp"
                                 android:textColor="#757575" />
 
@@ -237,16 +240,17 @@
                             android:orientation="vertical">
 
                             <TextView
+                                android:id="@+id/text4"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Dato 4"
+                                android:text="Teléfono"
                                 android:textSize="16sp"
                                 android:textStyle="bold" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Subhead"
+                                android:text="816827697"
                                 android:textSize="14sp"
                                 android:textColor="#757575" />
 
