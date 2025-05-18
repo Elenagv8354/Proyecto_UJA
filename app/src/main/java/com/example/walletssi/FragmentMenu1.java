@@ -52,6 +52,7 @@ public class FragmentMenu1 extends Fragment implements View.OnClickListener, Cre
     private ImageView imageViewUsuario;
     private NavController navController;
     private CardView selectedCardView = null;
+    private CredencialAdapter popupAdapter; // Declara el adaptador a nivel de clase
 
     private List<Credencial> listaCredenciales = new ArrayList<>();
 
@@ -61,6 +62,11 @@ public class FragmentMenu1 extends Fragment implements View.OnClickListener, Cre
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // Inicialización de la lista de credenciales (se llama solo una vez)
+        if (listaCredenciales.isEmpty()) {
+            listaCredenciales.add(new Credencial("CV1", false));
+            listaCredenciales.add(new Credencial("CV2", false));
+        }
     }
 
     @Override
@@ -91,11 +97,6 @@ public class FragmentMenu1 extends Fragment implements View.OnClickListener, Cre
         if (botonAñadir != null) {
             botonAñadir.setOnClickListener(v -> Navigation.findNavController(v).navigate(R.id.action_fragmentMenu1_to_fragmentScan));
         }
-
-        // Inicialización de la lista de credenciales (asegúrate de que los nombres coincidan con tus CardViews)
-        listaCredenciales.add(new Credencial("CV1", false));
-        listaCredenciales.add(new Credencial("CV2", false));
-        // ... añade más credenciales según tus CardViews ...
     }
 
     private void mostrarPopupMenuUsuario(View view) {
@@ -163,18 +164,31 @@ public class FragmentMenu1 extends Fragment implements View.OnClickListener, Cre
         TextView textViewPopupListaVacia = popupView.findViewById(R.id.textViewPopupListaVacia);
 
         recyclerViewPopup.setLayoutManager(new LinearLayoutManager(requireContext()));
-        CredencialAdapter popupAdapter = new CredencialAdapter(listaCredenciales, this);
+        popupAdapter = new CredencialAdapter(listaCredenciales, this); // Inicializa o reasigna el adaptador
         recyclerViewPopup.setAdapter(popupAdapter);
 
-        if (listaCredenciales.isEmpty()) {
-            recyclerViewPopup.setVisibility(View.GONE);
-            textViewPopupListaVacia.setVisibility(View.VISIBLE);
-        } else {
-            recyclerViewPopup.setVisibility(View.VISIBLE);
-            textViewPopupListaVacia.setVisibility(View.GONE);
-        }
+        actualizarVisibilidadListaPopup(recyclerViewPopup, textViewPopupListaVacia);
 
         popupWindow.showAsDropDown(anchorView, 0, 0, Gravity.END);
+    }
+
+    private void actualizarVisibilidadListaPopup(RecyclerView recyclerView, TextView textViewListaVacia) {
+        List<Credencial> credencialesVisiblesEnPopup = new ArrayList<>();
+        for (Credencial credencial : listaCredenciales) {
+            // Siempre mostrar todas las credenciales en el popup, pero el adaptador controlará el botón "Mostrar"
+            credencialesVisiblesEnPopup.add(credencial);
+        }
+
+        if (credencialesVisiblesEnPopup.isEmpty()) {
+            recyclerView.setVisibility(View.GONE);
+            textViewListaVacia.setVisibility(View.VISIBLE);
+        } else {
+            recyclerView.setVisibility(View.VISIBLE);
+            textViewListaVacia.setVisibility(View.GONE);
+            if (popupAdapter != null) {
+                popupAdapter.notifyDataSetChanged(); // Notifica al adaptador que los datos pueden haber cambiado
+            }
+        }
     }
 
     @Override
