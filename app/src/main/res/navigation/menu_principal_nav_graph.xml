@@ -45,6 +45,10 @@
         android:id="@+id/fragmentQr"
         android:name="com.example.walletssi.FragmentQr"
         android:label="fragment_qr"
-        tools:layout="@layout/fragment_qr" />
+        tools:layout="@layout/fragment_qr" >
+        <action
+            android:id="@+id/action_fragmentQr_to_fragmentScan"
+            app:destination="@id/fragmentScan" />
+    </fragment>
 
 </navigation>
