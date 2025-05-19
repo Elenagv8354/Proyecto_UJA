@@ -1,6 +1,7 @@
 package com.example.walletssi;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
 
 import android.os.Bundle;
 import android.content.Context;
@@ -13,13 +14,21 @@ public class ActivityMenuPrincipal extends AppCompatActivity {
     private static final String KEY_USUARIO = "usuario";
     private static final String KEY_CONTRASENA = "contrasena";
 
+    private FragmentMenu1 fragmentMenu1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu_principal);
 
         verificarSesion();
+
     }
+
+
+
+
+
 
     private void verificarSesion() {
         SharedPreferences sharedPreferences = getSharedPreferences(PREFS_USUARIO, Context.MODE_PRIVATE);

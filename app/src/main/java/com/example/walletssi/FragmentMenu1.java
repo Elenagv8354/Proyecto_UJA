@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 
@@ -54,7 +55,13 @@ public class FragmentMenu1 extends Fragment implements View.OnClickListener, Cre
     private CardView selectedCardView = null;
     private CredencialAdapter popupAdapter; // Declara el adaptador a nivel de clase
 
+    private RecyclerView recyclerViewActividad;
+    private List<String> listaActividadReciente = new ArrayList<>();
+    private ArrayAdapter<String> adapterActividadReciente;
+
     private List<Credencial> listaCredenciales = new ArrayList<>();
+
+
 
     public FragmentMenu1() {
     }
@@ -86,6 +93,8 @@ public class FragmentMenu1 extends Fragment implements View.OnClickListener, Cre
         imageViewOptionsCredencial2 = view.findViewById(R.id.imageViewOptionsCredencial2);
         imageViewBuscar = view.findViewById(R.id.imageViewBuscar);
 
+
+
         imageViewUsuario.setOnClickListener(v -> mostrarPopupMenuUsuario(v));
         imageViewOptionsCredencial1.setOnClickListener(this::showPopupMenuCredencial);
         imageViewOptionsCredencial2.setOnClickListener(this::showPopupMenuCredencial);
@@ -98,6 +107,8 @@ public class FragmentMenu1 extends Fragment implements View.OnClickListener, Cre
             botonAñadir.setOnClickListener(v -> Navigation.findNavController(v).navigate(R.id.action_fragmentMenu1_to_fragmentScan));
         }
     }
+
+
 
     private void mostrarPopupMenuUsuario(View view) {
         PopupMenu popupMenu = new PopupMenu(requireContext(), view);
