@@ -4,10 +4,8 @@ import android.app.AlertDialog;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,24 +16,24 @@ import android.widget.ImageView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.navigation.NavController;
-
 import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-
 /**
- * A simple {@link Fragment} subclass.
- * Use the {@link FragmentCredencial#} factory method to
- * create an instance of this fragment.
+ * FragmentCredencial es el fragmento principal donde el usuario visualiza y gestiona
+ * sus datos de credenciales personales. Permite mostrar/ocultar información sensible,
+ * seleccionar qué datos incluir en un código QR y generar dicho código,
+ * así como visualizar y gestionar el último QR guardado.
  */
+
 public class FragmentCredencial extends Fragment {
 
+    // Componentes de la interfaz de usuario
     private ImageView imageViewBack;
     private NavController navController;
     private Button botonEnviar;
@@ -51,8 +49,7 @@ public class FragmentCredencial extends Fragment {
     private boolean isTelefonoVisible = false;
     private boolean isQrVisible = false;
 
-
-    // Views para cada dato
+    // Referencias a los TextViews para mostrar los datos
     private TextView infoText1;
     private ImageView imageViewMostrarOcultarNombre;
     private TextView infoText2;
@@ -82,10 +79,11 @@ public class FragmentCredencial extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         navController = Navigation.findNavController(view);
 
+        // Configura el botón de retroceso para navegar hacia atrás.
         imageViewBack = view.findViewById(R.id.imageViewBack);
         imageViewBack.setOnClickListener(v -> navController.navigateUp());
 
-        // Inicializar vistas
+        // Inicializa vistas de los datos de la credencial
         infoText1 = view.findViewById(R.id.infoText1);
         imageViewMostrarOcultarNombre = view.findViewById(R.id.imageViewMostrarOcultarNombre);
         infoText2 = view.findViewById(R.id.infoText2);
@@ -97,9 +95,9 @@ public class FragmentCredencial extends Fragment {
 
         // Inicializar vistas del QR guardado y su "ojito"
         imageViewQrGuardado = view.findViewById(R.id.imageViewQrGuardado);
-        imageViewMostrarOcultarQr = view.findViewById(R.id.imageViewMostrarOcultarQr); // NUEVO ID
-        textViewMostrarOcultarQr = view.findViewById(R.id.textViewMostrarOcultarQr); // NUEVO ID
-        layoutQrToggle = view.findViewById(R.id.layoutQrToggle); // ¡Inicializar el LinearLayout!
+        imageViewMostrarOcultarQr = view.findViewById(R.id.imageViewMostrarOcultarQr);
+        textViewMostrarOcultarQr = view.findViewById(R.id.textViewMostrarOcultarQr);
+        layoutQrToggle = view.findViewById(R.id.layoutQrToggle);
 
         // Carga el QR guardado si existe, pero no lo muestra por defecto
         boolean qrExiste = cargarQrGuardado();
@@ -116,23 +114,20 @@ public class FragmentCredencial extends Fragment {
             imageViewQrGuardado.setVisibility(View.GONE); // Aseguramos que el QR está oculto al inicio
         }
 
-        // Establecer OnLongClickListener para borrar el código QR
+        // Configura el listener para borrar el código QR al mantener pulsado el ImageView.
         imageViewQrGuardado.setOnLongClickListener(v -> {
             mostrarDialogoBorrarQr();
             return true; // Indica que el evento de long click ha sido consumido
         });
 
-        // // // ESTO ES LO QUE FALTABA: INICIALIZAR LA VISIBILIDAD DE LOS TEXTVIEWS // // //
-        // Llama a la función que aplica el estado de visibilidad con el estado inicial (false = GONE).
-        // Pasamos los datos REALES para que estén listos si se hacen visibles.
+        // Aplica el estado de visibilidad inicial (oculto) a cada campo de datos y establece los textos reales.
         applyVisibilityState(infoText1, imageViewMostrarOcultarNombre, isNombreVisible, realNombre);
         applyVisibilityState(infoText2, imageViewMostrarOcultarDni, isDniVisible, realDni);
         applyVisibilityState(infoText3, imageViewMostrarOcultarNacimiento, isNacimientoVisible, realNacimiento);
         applyVisibilityState(infoText4, imageViewMostrarOcultarTelefono, isTelefonoVisible, realTelefono);
 
-        // --- CONFIGURAR LISTENERS PARA MOSTRAR/OCULTAR ---
-        // Los listeners ahora invierten el estado booleano y luego llaman a 'applyVisibilityState'
-        // para actualizar la UI.
+        // Configura los listeners para los iconos de "ojito" de cada campo de datos.
+        // Al hacer clic, invierten el estado de visibilidad y actualizan la UI.
         imageViewMostrarOcultarNombre.setOnClickListener(v -> {
             isNombreVisible = !isNombreVisible; // Invertir el estado
             applyVisibilityState(infoText1, imageViewMostrarOcultarNombre, isNombreVisible, realNombre);
@@ -149,63 +144,59 @@ public class FragmentCredencial extends Fragment {
             isTelefonoVisible = !isTelefonoVisible;
             applyVisibilityState(infoText4, imageViewMostrarOcultarTelefono, isTelefonoVisible, realTelefono);
         });
-        // --- NUEVO LISTENER PARA EL "OJITO" DEL QR ---
+
+        // Configura el listener para el icono de "ojito" del código QR guardado.
         imageViewMostrarOcultarQr.setOnClickListener(v -> {
-            isQrVisible = !isQrVisible; // Invertir el estado de visibilidad del QR
+            isQrVisible = !isQrVisible;
             applyQrVisibilityState(imageViewQrGuardado, imageViewMostrarOcultarQr, isQrVisible);
         });
 
-
+        // Configura el botón para generar el código QR.
         botonEnviar = view.findViewById(R.id.boton_enviar);
         if (botonEnviar != null) {
             botonEnviar.setOnClickListener(v -> {
-                // IMPORTANT: 'obtenerDatosSeleccionados' SIEMPRE usa las variables 'realXxx'
+                // Recopila los datos seleccionados por el usuario para el QR.
                 List<String> datosSeleccionados = obtenerDatosSeleccionados(view);
 
+                // Si se seleccionó al menos un dato, navega al fragmento de QR pasando los datos seleccionados.
                 if (!datosSeleccionados.isEmpty()) {
                     Bundle bundle = new Bundle();
                     bundle.putStringArrayList("datos", (ArrayList<String>) datosSeleccionados);
                     navController.navigate(R.id.action_fragmentCredencial_to_fragmentQr, bundle);
                 } else {
+                    // Muestra un mensaje si no se seleccionó ningún dato.
                     Toast.makeText(requireContext(), "Por favor, selecciona al menos un dato.", Toast.LENGTH_SHORT).show();
                 }
             });
         }
-    } // Cierre correcto de onViewCreated
+    }
 
-    // --- Aquí es donde debe ir el método onResume() ---
     @Override
     public void onResume() {
         super.onResume();
         // Llama a cargarQrGuardado cada vez que el fragment se vuelve visible
-        // Esto es crucial para que el QR se muestre si se ha generado y guardado en FragmentQr
         boolean qrExiste = cargarQrGuardado();
-        Log.d("FragmentCredencial", "onResume: QR existe? " + qrExiste); // Para depuración
+        Log.d("FragmentCredencial", "onResume: QR existe? " + qrExiste);
 
         // Reinicia el estado de visibilidad del QR para que siempre inicie oculto
-        // y el usuario lo active manualmente con el "ojito".
         isQrVisible = false;
 
         // Lógica de visibilidad para el QR y su control
         if (qrExiste) {
-            // Si hay QR, el layout con el "ojito" y el texto debe ser visible
             if (layoutQrToggle != null) {
                 layoutQrToggle.setVisibility(View.VISIBLE);
             }
-            // El ImageView del QR debe estar oculto por defecto
             imageViewQrGuardado.setVisibility(View.GONE);
-            // El icono del "ojito" debe mostrarse como "cerrado"
             imageViewMostrarOcultarQr.setImageResource(R.drawable.mostrar_ocultar);
         } else {
-            // Si no hay QR, ocultar todo lo relacionado con el QR
             if (layoutQrToggle != null) {
                 layoutQrToggle.setVisibility(View.GONE);
             }
             imageViewQrGuardado.setVisibility(View.GONE);
         }
 
-        // También inicializa la visibilidad de los datos de la credencial aquí
-        // para que se restablezcan correctamente si el usuario los ocultó antes de ir al FragmentQr
+        // Vuelve a aplicar el estado de visibilidad de los datos de la credencial
+        // para asegurar que se muestren según su último estado conocido.
         applyVisibilityState(infoText1, imageViewMostrarOcultarNombre, isNombreVisible, realNombre);
         applyVisibilityState(infoText2, imageViewMostrarOcultarDni, isDniVisible, realDni);
         applyVisibilityState(infoText3, imageViewMostrarOcultarNacimiento, isNacimientoVisible, realNacimiento);
@@ -222,13 +213,13 @@ public class FragmentCredencial extends Fragment {
         if (archivoQr.exists()) {
             Bitmap bitmapQr = BitmapFactory.decodeFile(archivoQr.getAbsolutePath());
             imageViewQrGuardado.setImageBitmap(bitmapQr);
-            // IMPORTANTE: No lo hacemos visible aquí. Su visibilidad la controlará el nuevo "ojito".
             return true; // Indica que se encontró y cargó un QR
         } else {
             return false; // No se encontró un QR
         }
     }
 
+    //Muestra un diálogo de confirmación antes de borrar el código QR guardado.
     private void mostrarDialogoBorrarQr() {
         new AlertDialog.Builder(requireContext())
                 .setTitle("Borrar código QR")
@@ -242,6 +233,7 @@ public class FragmentCredencial extends Fragment {
                 .show();
     }
 
+    //Elimina el archivo del código QR guardado del almacenamiento interno.
     private void borrarQrGuardado() {
         File directorioInterno = requireContext().getFilesDir();
         File archivoQr = new File(directorioInterno, "codigo_qr.png");
@@ -252,10 +244,10 @@ public class FragmentCredencial extends Fragment {
                 imageViewQrGuardado.setVisibility(View.GONE);
                 isQrVisible = false;
                 // Oculta el LinearLayout completo que contiene el "ojito" y el texto
-                if (layoutQrToggle != null) { // Asegúrate de que 'layoutQrToggle' no sea nulo antes de usarlo
+                if (layoutQrToggle != null) {
                     layoutQrToggle.setVisibility(View.GONE);
                 }
-                imageViewMostrarOcultarQr.setImageResource(R.drawable.mostrar_ocultar); // Asegurar icono de ojo cerrado
+                imageViewMostrarOcultarQr.setImageResource(R.drawable.mostrar_ocultar);
             } else {
                 Toast.makeText(requireContext(), "Error al borrar el código QR", Toast.LENGTH_SHORT).show();
             }
@@ -264,20 +256,20 @@ public class FragmentCredencial extends Fragment {
         }
     }
 
-    // --- FUNCIÓN PARA APLICAR EL ESTADO DE VISIBILIDAD DE LOS DATOS DE LA CREDENCIAL ---
+    //Función para aplicar el estado de visibilidad de los datos de la credencial
     private void applyVisibilityState(TextView textView, ImageView imageView, boolean visible, String data) {
         if (visible) {
             textView.setText(data);
             textView.setVisibility(View.VISIBLE);
-            imageView.setImageResource(R.drawable.mostrar); // Ojo ABIERTO (considera cambiar a ic_visibility_on)
+            imageView.setImageResource(R.drawable.mostrar); // Ojo ABIERTO
         } else {
             textView.setText("");
             textView.setVisibility(View.GONE);
-            imageView.setImageResource(R.drawable.mostrar_ocultar); // Ojo CERRADO (considera cambiar a ic_visibility_off)
+            imageView.setImageResource(R.drawable.mostrar_ocultar); // Ojo CERRADO
         }
     }
 
-    // --- ¡NUEVA FUNCIÓN! Para aplicar el estado de visibilidad del QR ---
+    //Aplica el estado de visibilidad al ImageView del código QR y actualiza el icono del "ojito".
     private void applyQrVisibilityState(ImageView qrImageView, ImageView toggleImageView, boolean visible) {
         if (visible) {
             qrImageView.setVisibility(View.VISIBLE); // Muestra el QR
@@ -288,9 +280,7 @@ public class FragmentCredencial extends Fragment {
         }
     }
 
-
-    // --- MÉTODO PARA OBTENER DATOS SELECCIONADOS PARA EL QR ---
-    // Es CRÍTICO que este método SIEMPRE use las variables 'realXxx' para los datos.
+    //Recopila los datos seleccionados por el usuario a través de los CheckBox para incluirlos en la generación del código QR.
     private List<String> obtenerDatosSeleccionados(View rootView) {
         List<String> seleccionados = new ArrayList<>();
         LinearLayout linearLayoutInformacion = rootView.findViewById(R.id.linearLayoutInformacion);
@@ -304,16 +294,14 @@ public class FragmentCredencial extends Fragment {
                         int checkBoxId = getResources().getIdentifier("checkBoxDato" + (i + 1), "id", requireContext().getPackageName());
                         CheckBox checkBox = linearLayoutHorizontal.findViewById(checkBoxId);
 
-                        // Obtén el TextView del título (ej. "Nombre:", "DNI:") para el prefijo del QR.
+                        // Obtiene el TextView del título (ej. "Nombre:", "DNI:") para el prefijo del QR.
                         int textId = getResources().getIdentifier("text" + (i + 1), "id", requireContext().getPackageName());
                         TextView textViewTitulo = null;
-                        // Intenta encontrar el LinearLayout que contiene los textos primero (si lo tienes en tu XML)
                         int linearLayoutTextoId = getResources().getIdentifier("linearLayoutTexto" + obtenerNombreDato(i + 1), "id", requireContext().getPackageName());
                         LinearLayout linearLayoutTextos = linearLayoutHorizontal.findViewById(linearLayoutTextoId);
                         if (linearLayoutTextos != null && linearLayoutTextos.getChildCount() > 0) {
                             textViewTitulo = (TextView) linearLayoutTextos.getChildAt(0);
                         } else {
-                            // Si no, busca el TextView del título directamente
                             textViewTitulo = linearLayoutHorizontal.findViewById(textId);
                         }
 
@@ -321,8 +309,8 @@ public class FragmentCredencial extends Fragment {
                         if (checkBox != null && checkBox.isChecked()) {
                             String prefijo = (textViewTitulo != null) ? textViewTitulo.getText().toString() + " " : "";
 
-                            // AÑADE EL DATO REAL DESDE LAS VARIABLES DE CLASE
-                            switch (i + 1) { // i + 1 porque tus IDs de datos son 1-indexed (infoText1, etc.)
+                            // Añade el dato real si el CheckBox está marcado
+                            switch (i + 1) {
                                 case 1: // Corresponde a infoText1 (Nombre)
                                     if (!realNombre.isEmpty()) seleccionados.add(prefijo + realNombre);
                                     break;
@@ -344,12 +332,8 @@ public class FragmentCredencial extends Fragment {
         return seleccionados;
     }
 
-    /**
-     * Método auxiliar para obtener el nombre de un dato basado en su índice.
-     * Usado para construir IDs de recursos dinámicamente.
-     * @param index El índice del dato (1 para Nombre, 2 para DNI, etc.).
-     * @return El nombre del dato como cadena.
-     */
+    //Método auxiliar para obtener el nombre de un campo de dato basado en su índice.
+    //Utilizado principalmente para la construcción dinámica de IDs de recursos.
     private String obtenerNombreDato(int index) {
         switch (index) {
             case 1: return "Nombre";

@@ -21,12 +21,15 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 /**
- * A simple {@link Fragment} subclass.
- * Use the {@link FragmentRegistro#newInstance} factory method to
- * create an instance of this fragment.
+ * FragmentRegistro es el fragmento encargado de permitir a los nuevos usuarios
+ * registrarse en la aplicación. Solicita un nombre de usuario, email, contraseña,
+ * y la aceptación de términos, validando los datos antes de guardarlos
+ * y redirigir al usuario a la pantalla de inicio de sesión.
  */
+
 public class FragmentRegistro extends Fragment {
 
+    // Componentes de la interfaz de usuario para la entrada de datos y el botón.
     private EditText editUsuario;
     private EditText editEmail;
     private EditText editContrasena;
@@ -35,6 +38,7 @@ public class FragmentRegistro extends Fragment {
     private CheckBox checkboxTerminos;
     private NavController navController;
 
+    // Constantes para las claves de las preferencias compartidas.
     private static final String PREFS_USUARIO = "prefs_usuario";
     private static final String KEY_USUARIO = "usuario";
     private static final String KEY_CONTRASENA = "contrasena";
@@ -81,7 +85,6 @@ public class FragmentRegistro extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_registro, container, false);
     }
 
@@ -100,6 +103,11 @@ public class FragmentRegistro extends Fragment {
         botonRegistrar.setOnClickListener(v -> registrarUsuario());
     }
 
+    // Procesa el intento de registro de un nuevo usuario.
+    // Realiza validaciones de los datos ingresados (campos vacíos, formato de email,
+    // longitud y coincidencia de contraseñas, aceptación de términos).
+    // Si los datos son válidos, los guarda en las preferencias compartidas y edirige al usuario
+    // a la pantalla de inicio de sesión.
     private void registrarUsuario() {
         String usuario = editUsuario.getText().toString().trim();
         String email = editEmail.getText().toString().trim();
@@ -141,7 +149,7 @@ public class FragmentRegistro extends Fragment {
             return;
         }
 
-        // Guardar los datos del usuario usando SharedPreferences dentro del contexto de la Activity
+        // Guardar los datos del usuario en las preferencias compartidas.
         SharedPreferences sharedPreferences = requireActivity().getSharedPreferences(PREFS_USUARIO, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString(KEY_USUARIO, usuario);
@@ -151,7 +159,7 @@ public class FragmentRegistro extends Fragment {
 
         Toast.makeText(requireContext(), "Registro exitoso", Toast.LENGTH_SHORT).show();
 
-        // Navegar al Fragment de inicio de sesión
+        // Navega al Fragment de inicio de sesión
         navController.navigate(R.id.action_fragmentRegistro2_to_fragmentInicioSesion2);
     }
 }

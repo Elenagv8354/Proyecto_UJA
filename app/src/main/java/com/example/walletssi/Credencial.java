@@ -1,5 +1,11 @@
 package com.example.walletssi;
 
+/**
+ * La clase Credencial representa un único dato de credencial personal.
+ * Almacena el valor del dato y un estado booleano que indica si este dato
+ * debe mostrarse u ocultarse en la interfaz de usuario.
+ */
+
 public class Credencial {
     private String nombre;
     private boolean oculta;

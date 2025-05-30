@@ -5,13 +5,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
 import java.util.List;
 
+/**
+ * CredencialAdapter es un adaptador para RecyclerView que se encarga de mostrar
+ * una lista de objetos Credencial.
+ * Proporciona los datos a cada elemento visual de la lista y maneja la interacción
+ * del usuario, como el botón de "Mostrar" para las credenciales ocultas.
+ */
+
 public class CredencialAdapter extends RecyclerView.Adapter<CredencialAdapter.CredencialViewHolder> {
+
+    // Lista de objetos Credencial que se mostrarán en el RecyclerView.
     private List<Credencial> credenciales;
     private final OnRestaurarClickListener restaurarClickListener;
 
@@ -24,6 +31,7 @@ public class CredencialAdapter extends RecyclerView.Adapter<CredencialAdapter.Cr
         this.restaurarClickListener = listener;
     }
 
+    //Actualiza la lista de credenciales y notifica al RecyclerView para que se actualice con los nuevos datos.
     public void setCredenciales(List<Credencial> credenciales) {
         this.credenciales = credenciales;
         notifyDataSetChanged();
@@ -42,14 +50,13 @@ public class CredencialAdapter extends RecyclerView.Adapter<CredencialAdapter.Cr
         Credencial credencial = credenciales.get(position);
         holder.textViewNombre.setText(credencial.getNombre());
 
+        // Controla la visibilidad del botón "Restaurar" basado en el estado 'oculta' de la credencial.
         if (credencial.isOculta()) {
             holder.buttonRestaurar.setVisibility(View.VISIBLE);
             holder.buttonRestaurar.setOnClickListener(v -> restaurarClickListener.onRestaurarClick(credencial));
         } else {
             holder.buttonRestaurar.setVisibility(View.GONE);
         }
-
-        // Puedes añadir un OnClickListener para navegar a la credencial si se pulsa el item
     }
 
     @Override

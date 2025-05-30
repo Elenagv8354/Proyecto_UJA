@@ -38,12 +38,14 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-
 /**
- * A simple {@link Fragment} subclass.
- * Use the {@link FragmentMenu1#} factory method to
- * create an instance of this fragment.
+ * FragmentMenu1 es el fragmento principal del menú de la aplicación,
+ * accesible después de la autenticación. Muestra las credenciales del usuario,
+ * proporciona opciones para gestionarlas (eliminar, ocultar, mostrar)
+ * y permite navegar a otras secciones como la generación de QR o el perfil del usuario.
+ * También integra una lista de "actividad reciente" (aunque no se use en el código mostrado).
  */
+
 public class FragmentMenu1 extends Fragment implements View.OnClickListener, CredencialAdapter.OnRestaurarClickListener {
     private CardView cardViewCredencial1;
     private CardView cardViewCredencial2;
@@ -53,7 +55,7 @@ public class FragmentMenu1 extends Fragment implements View.OnClickListener, Cre
     private ImageView imageViewUsuario;
     private NavController navController;
     private CardView selectedCardView = null;
-    private CredencialAdapter popupAdapter; // Declara el adaptador a nivel de clase
+    private CredencialAdapter popupAdapter;
 
     private RecyclerView recyclerViewActividad;
     private List<String> listaActividadReciente = new ArrayList<>();
@@ -61,15 +63,13 @@ public class FragmentMenu1 extends Fragment implements View.OnClickListener, Cre
 
     private List<Credencial> listaCredenciales = new ArrayList<>();
 
-
-
     public FragmentMenu1() {
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // Inicialización de la lista de credenciales (se llama solo una vez)
+        // Inicialización de la lista de credenciales
         if (listaCredenciales.isEmpty()) {
             listaCredenciales.add(new Credencial("CV1", false));
             listaCredenciales.add(new Credencial("CV2", false));
@@ -84,8 +84,10 @@ public class FragmentMenu1 extends Fragment implements View.OnClickListener, Cre
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        // Inicializa el NavController para gestionar la navegación.
         navController = Navigation.findNavController(view);
 
+        // Inicializa las referencias a los componentes de la UI y sus listeners.
         imageViewUsuario = view.findViewById(R.id.imageViewUsuario);
         cardViewCredencial1 = view.findViewById(R.id.CV1);
         cardViewCredencial2 = view.findViewById(R.id.CV2);
@@ -93,8 +95,7 @@ public class FragmentMenu1 extends Fragment implements View.OnClickListener, Cre
         imageViewOptionsCredencial2 = view.findViewById(R.id.imageViewOptionsCredencial2);
         imageViewBuscar = view.findViewById(R.id.imageViewBuscar);
 
-
-
+        // Configura los listeners para los botones y CardViews.
         imageViewUsuario.setOnClickListener(v -> mostrarPopupMenuUsuario(v));
         imageViewOptionsCredencial1.setOnClickListener(this::showPopupMenuCredencial);
         imageViewOptionsCredencial2.setOnClickListener(this::showPopupMenuCredencial);
@@ -102,20 +103,19 @@ public class FragmentMenu1 extends Fragment implements View.OnClickListener, Cre
         cardViewCredencial2.setOnClickListener(this);
         imageViewBuscar.setOnClickListener(this::mostrarPopupListaCredenciales);
 
+        // Configura el botón para añadir nuevas credenciales navegando a la pantalla de escaneo.
         Button botonAñadir = view.findViewById(R.id.boton_menu_1_add);
         if (botonAñadir != null) {
             botonAñadir.setOnClickListener(v -> Navigation.findNavController(v).navigate(R.id.action_fragmentMenu1_to_fragmentScan));
         }
     }
 
-
-
+    // Muestra un menú emergente para el usuario, con opciones como cerrar sesión.
     private void mostrarPopupMenuUsuario(View view) {
         PopupMenu popupMenu = new PopupMenu(requireContext(), view);
         popupMenu.getMenuInflater().inflate(R.menu.menu_perfil, popupMenu.getMenu());
         popupMenu.setOnMenuItemClickListener(item -> {
             int itemId = item.getItemId();
-            // ... (tu lógica del menú de usuario existente) ...
             if (itemId == R.id.action_cerrar_sesion) {
                 cerrarSesion();
                 return true;
@@ -125,14 +125,12 @@ public class FragmentMenu1 extends Fragment implements View.OnClickListener, Cre
         popupMenu.show();
     }
 
+    //Cierra la sesión del usuario, redirigiéndolo a la pantalla de bienvenida y finalizando la actividad actual
     private void cerrarSesion() {
-        // Aquí puedes añadir cualquier lógica adicional de limpieza o guardado de estado
-        // antes de cerrar la sesión.
-
-        // Crea un Intent para iniciar la Activity de inicio de sesión
+        // Intent para iniciar la Activity de inicio de sesión
         Intent intent = new Intent(requireContext(), ActivityBienvenida.class);
 
-        // Opcional: Puedes añadir flags al Intent si necesitas limpiar la pila de actividades y evitar volver atrás
+        // Añadir flags al Intent para limpiar la pila de actividades y evitar volver atrás
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 
         // Inicia la Activity de inicio de sesión
@@ -144,6 +142,7 @@ public class FragmentMenu1 extends Fragment implements View.OnClickListener, Cre
         }
     }
 
+    //Muestra un menú emergente con opciones para gestionar una credencial específica (eliminar u ocultar).
     private void showPopupMenuCredencial(View view) {
         PopupMenu popupMenu = new PopupMenu(requireContext(), view);
         popupMenu.getMenu().add(0, 1, 0, "Eliminar");
@@ -162,6 +161,7 @@ public class FragmentMenu1 extends Fragment implements View.OnClickListener, Cre
         popupMenu.show();
     }
 
+    //Muestra un popup flotante con una lista de todas las credenciales, permitiendo restaurar las que están ocultas.
     private void mostrarPopupListaCredenciales(View anchorView) {
         LayoutInflater inflater = (LayoutInflater) requireContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View popupView = inflater.inflate(R.layout.popup_credenciales, null);
@@ -175,7 +175,7 @@ public class FragmentMenu1 extends Fragment implements View.OnClickListener, Cre
         TextView textViewPopupListaVacia = popupView.findViewById(R.id.textViewPopupListaVacia);
 
         recyclerViewPopup.setLayoutManager(new LinearLayoutManager(requireContext()));
-        popupAdapter = new CredencialAdapter(listaCredenciales, this); // Inicializa o reasigna el adaptador
+        popupAdapter = new CredencialAdapter(listaCredenciales, this);
         recyclerViewPopup.setAdapter(popupAdapter);
 
         actualizarVisibilidadListaPopup(recyclerViewPopup, textViewPopupListaVacia);
@@ -183,6 +183,8 @@ public class FragmentMenu1 extends Fragment implements View.OnClickListener, Cre
         popupWindow.showAsDropDown(anchorView, 0, 0, Gravity.END);
     }
 
+    // Actualiza la visibilidad del RecyclerView y el mensaje de lista vacía en el popup.
+    // Notifica al adaptador sobre posibles cambios en los datos.
     private void actualizarVisibilidadListaPopup(RecyclerView recyclerView, TextView textViewListaVacia) {
         List<Credencial> credencialesVisiblesEnPopup = new ArrayList<>();
         for (Credencial credencial : listaCredenciales) {
@@ -207,6 +209,7 @@ public class FragmentMenu1 extends Fragment implements View.OnClickListener, Cre
         mostrarDialogoRestaurar(credencial);
     }
 
+    // Muestra un diálogo de confirmación para restaurar una credencial oculta.
     private void mostrarDialogoRestaurar(Credencial credencial) {
         new AlertDialog.Builder(requireContext())
                 .setMessage("¿Quieres mostrar la credencial '" + credencial.getNombre() + "'?")
@@ -218,8 +221,7 @@ public class FragmentMenu1 extends Fragment implements View.OnClickListener, Cre
                     } else if (credencial.getNombre().equals("CV2")) {
                         cardViewCredencial2.setVisibility(View.VISIBLE);
                     }
-                    // Notificar al adaptador del popup que los datos han cambiado
-                    // Esto es importante para que el botón "Mostrar" desaparezca si la credencial ya no está oculta
+                    // Notifica al adaptador del popup que los datos han cambiado
                     mostrarPopupListaCredenciales(imageViewBuscar); // Reabrir el popup para refrescar la lista
                 })
                 .setNegativeButton("No", null)
@@ -234,6 +236,7 @@ public class FragmentMenu1 extends Fragment implements View.OnClickListener, Cre
                 .show();
     }
 
+    // Elimina una credencial de la interfaz de usuario y de la lista de datos.
     private void eliminarCredencial(View viewOpciones) {
         CardView cardViewToRemove = null;
         String nombreCredencialToRemove = "";
@@ -261,6 +264,7 @@ public class FragmentMenu1 extends Fragment implements View.OnClickListener, Cre
         }
     }
 
+    // Oculta una credencial de la interfaz de usuario y actualiza su estado en la lista de datos.
     private void ocultarCredencial(View viewOpciones) {
         CardView cardViewToHide = null;
         String nombreCredencialToHide = "";
@@ -286,6 +290,7 @@ public class FragmentMenu1 extends Fragment implements View.OnClickListener, Cre
         }
     }
 
+    //Muestra todas las credenciales ocultas en la interfaz de usuario y actualiza su estado en la lista de datos.
     private void mostrarTodasCredenciales() {
         if (cardViewCredencial1 != null) {
             cardViewCredencial1.setVisibility(View.VISIBLE);
@@ -293,7 +298,7 @@ public class FragmentMenu1 extends Fragment implements View.OnClickListener, Cre
         if (cardViewCredencial2 != null) {
             cardViewCredencial2.setVisibility(View.VISIBLE);
         }
-        // También deberías actualizar el estado 'oculta' en la lista
+
         for (Credencial c : listaCredenciales) {
             c.setOculta(false);
         }
@@ -301,6 +306,8 @@ public class FragmentMenu1 extends Fragment implements View.OnClickListener, Cre
         Toast.makeText(requireContext(), "Mostrando todas las credenciales", Toast.LENGTH_SHORT).show();
     }
 
+    // Listener genérico para los clics en las CardViews de las credenciales.
+    // Maneja el resaltado de la CardView seleccionada y la navegación al FragmentCredencial.
     @Override
     public void onClick(View v) {
         if (selectedCardView != null) {
@@ -311,10 +318,12 @@ public class FragmentMenu1 extends Fragment implements View.OnClickListener, Cre
         navController.navigate(R.id.action_menu1_to_credencial);
     }
 
+    // Establece el color de fondo de una CardView para indicar que está seleccionada.
     private void setCardViewBackgroundSelected(CardView cardView) {
         cardView.setCardBackgroundColor(getResources().getColor(R.color.colorCredencial, requireContext().getTheme()));
     }
 
+    // Restablece el color de fondo de una CardView a su estado original (no seleccionada).
     private void resetCardViewBackground(CardView cardView) {
         cardView.setCardBackgroundColor(getResources().getColor(android.R.color.white, requireContext().getTheme()));
     }

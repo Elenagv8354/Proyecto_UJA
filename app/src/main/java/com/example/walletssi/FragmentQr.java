@@ -47,14 +47,16 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
 
-
-
 /**
- * A simple {@link Fragment} subclass.
- * Use the {@link FragmentQr#} factory method to
- * create an instance of this fragment.
+ * FragmentQr es el fragmento responsable de mostrar un código QR generado
+ * a partir de datos del usuario. Permite al usuario escanear, compartir
+ * y descargar el código QR, además de manejar los permisos necesarios
+ * para estas operaciones.
  */
+
 public class FragmentQr extends Fragment {
+
+    // Componentes de la interfaz de usuario
     private ImageView imageViewBack;
     private ImageView imageViewQrCode;
     private NavController navController;
@@ -62,7 +64,9 @@ public class FragmentQr extends Fragment {
     private Button buttonCompartir;
     private Button buttonDescargar;
     private Bitmap qrBitmap;
-    private static final int CAMERA_PERMISSION_REQUEST_CODE_SCAN = 201; // Diferente código para evitar conflictos
+
+    // Código de solicitud para el permiso de la cámara (para escanear)
+    private static final int CAMERA_PERMISSION_REQUEST_CODE_SCAN = 201;
 
     @Nullable
     @Override
@@ -103,6 +107,7 @@ public class FragmentQr extends Fragment {
         }
     }
 
+    //Carga un código QR guardado previamente desde el almacenamiento interno de la aplicación y lo muestra en el ImageView.
     private void cargarQrGuardadoInterno() {
         File directorioInterno = requireContext().getFilesDir();
         File archivoQr = new File(directorioInterno, "codigo_qr.png");
@@ -115,6 +120,7 @@ public class FragmentQr extends Fragment {
         }
     }
 
+    // Genera un código QR a partir de una cadena de texto
     private Bitmap generarQrCode(String data) {
         MultiFormatWriter multiFormatWriter = new MultiFormatWriter();
         try {
@@ -129,6 +135,8 @@ public class FragmentQr extends Fragment {
         }
     }
 
+    // Guarda el Bitmap del código QR en el almacenamiento interno de la aplicación.
+    // Esto permite que el QR persista y pueda ser recuperado más tarde.
     private void guardarQrInterno(Bitmap bitmapQr) {
         File directorioInterno = requireContext().getFilesDir();
         File archivoQr = new File(directorioInterno, "codigo_qr.png");
@@ -136,12 +144,8 @@ public class FragmentQr extends Fragment {
         try {
             fos = new FileOutputStream(archivoQr);
             bitmapQr.compress(Bitmap.CompressFormat.PNG, 100, fos);
-            // Opcional: Mostrar un mensaje de éxito
-            // Toast.makeText(requireContext(), "Código QR guardado internamente", Toast.LENGTH_SHORT).show();
         } catch (IOException e) {
             e.printStackTrace();
-            // Opcional: Mostrar un mensaje de error
-            // Toast.makeText(requireContext(), "Error al guardar el código QR internamente", Toast.LENGTH_SHORT).show();
         } finally {
             if (fos != null) {
                 try {
@@ -153,6 +157,8 @@ public class FragmentQr extends Fragment {
         }
     }
 
+    // Inicia el proceso de escaneo de un código QR. Primero verifica el permiso
+    // de la cámara; si no lo tiene, lo solicita. Si ya lo tiene, navega al FragmentScan.
     private void iniciarEscaneo() {
         if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -160,11 +166,11 @@ public class FragmentQr extends Fragment {
                     new String[]{Manifest.permission.CAMERA},
                     CAMERA_PERMISSION_REQUEST_CODE_SCAN);
         } else {
-            // Navegar al FragmentScan
             navController.navigate(R.id.action_fragmentQr_to_fragmentScan);
         }
     }
 
+    // Permite al usuario compartir el código QR generado a través de otras aplicaciones instaladas en el dispositivo.
     private void compartirQr() {
         if (qrBitmap != null) {
             Intent shareIntent = new Intent(Intent.ACTION_SEND);
@@ -184,6 +190,8 @@ public class FragmentQr extends Fragment {
         }
     }
 
+    // Guarda un Bitmap en el directorio de caché de la aplicación y devuelve su URI.
+    // Esto es necesario para compartir archivos con otras aplicaciones de forma segura.
     private Uri guardarImagenEnCache(Bitmap bitmap) {
         try {
             File cachePath = new File(requireContext().getCacheDir(), "images");
@@ -199,6 +207,7 @@ public class FragmentQr extends Fragment {
         }
     }
 
+    // Descarga el código QR generado a la galería de imágenes del dispositivo.
     private void descargarQr() {
         if (qrBitmap != null) {
             String nombreArchivo = "codigo_qr_" + System.currentTimeMillis() + ".png";
@@ -208,7 +217,7 @@ public class FragmentQr extends Fragment {
                     ContentValues values = new ContentValues();
                     values.put(MediaStore.Images.Media.DISPLAY_NAME, nombreArchivo);
                     values.put(MediaStore.Images.Media.MIME_TYPE, "image/png");
-                    values.put(MediaStore.Images.Media.RELATIVE_PATH, Environment.DIRECTORY_PICTURES + "/TuCarpetaQR"); // O la carpeta que desees
+                    values.put(MediaStore.Images.Media.RELATIVE_PATH, Environment.DIRECTORY_PICTURES + "/TuCarpetaQR");
                     Uri uri = requireContext().getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
                     if (uri != null) {
                         fos = requireContext().getContentResolver().openOutputStream(uri);
@@ -238,6 +247,7 @@ public class FragmentQr extends Fragment {
         }
     }
 
+    // Maneja la respuesta a la solicitud de permisos.
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (requestCode == CAMERA_PERMISSION_REQUEST_CODE_SCAN) {
