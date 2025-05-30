@@ -2,10 +2,52 @@
     <string name="app_name">WalletSSI</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="no_hay_credenciales">No hay credenciales</string>
+
+    <!-- String [activity_bienvenida.xml] -->
+    <string name="tituloBienvenida">Bienvenido! Mi Wallet SSI</string>
+    <string name="mensajeBienvenida">Gestiona tu identidad digital de forma segura</string>
+    <string name="buttonIniciar">Iniciar Sesión</string>
+    <string name="buttonRegistrar">Registrar</string>
+
+    <!-- String [fragment_inicio_sesion.xml] -->
+    <string name="textHola">Hola!</string>
+    <string name="textInicioS">Inicia Sesión</string>
+    <string name="text_usuario">Nombre de usuario o Email</string>
+    <string name="text_contrasena">Contraseña</string>
+    <string name="text_olvido_contrasena"> ¿Has olvidado la contraseña?</string>
+
+    <!-- String [fragment_registro.xml] -->
+    <string name="textRegistro">Regístrate</string>
+    <string name="text_usuarioR">Nombre de usuario</string>
+    <string name="text_emailR">Email</string>
+    <string name="text_contrasenaRep">Repetir contraseña</string>
+    <string name="boton_registrar">Registrar</string>
+    <string name="text_terminos">Acepto la política y los términos</string>
+
+    <!-- String [fragment_menu1.xml] -->
+    <string name="tituloMenu">        Mi Wallet SSI</string>
+    <string name="textListActividad">Actividad reciente</string>
     <string name="icono_usuario">Icono de usuario. Toca para ver el menú de perfil.</string>
+    <string name="buscar_credenciales">Buscar credenciales</string>
     <string name="boton_home">Ir a la pantalla principal.</string>
     <string name="boton_añadir">Añadir nueva credencial.</string>
-    <string name="no_hay_credenciales">No hay credenciales</string>
-    <string name="buscar_credenciales">Buscar credenciales</string>
-    <string name="descripcion_mostrar_ocultar_nombre">Mostrar u ocultar el nombre completo</string>
+
+    <!-- String [fragment_credencial.xml] -->
+    <string name="text_info">Información</string>
+    <string name="buttonEnviar">Enviar</string>
+    <string name="mostrarQR">Mostrar último QR guardado</string>
+    <string name="descripcion_mostrar_ocultar_dato">Mostrar u ocultar el dato completo</string>
+
+    <!-- String [fragment_qr.xml] -->
+    <string name="text_QR">Código QR</string>
+    <string name="boton_escanear">Escanear</string>
+    <string name="boton_compartir">Compartir</string>
+    <string name="boton_descargar">Descargar</string>
+
+    <!-- String [fragment_scan.xml] -->
+    <string name="titulo_scan">Scan</string>
+    <string name="textImporGaleria">Importar desde la Galería</string>
+    <string name="textAyudaScan"> ¿Cómo escanear?</string>
+
 </resources>

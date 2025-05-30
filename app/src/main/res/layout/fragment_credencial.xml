@@ -65,7 +65,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
-                android:text="Información"
+                android:text="@string/text_info"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
@@ -114,7 +114,6 @@
                                 android:id="@+id/infoText1"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Elena García Valenzuela"
                                 android:textSize="14sp"
                                 android:textColor="#757575" />
 
@@ -129,7 +128,7 @@
                             android:clickable="true"
                             android:focusable="true"
                             android:src="@drawable/mostrar"
-                            android:contentDescription="@string/descripcion_mostrar_ocultar_nombre"/>
+                            android:contentDescription="@string/descripcion_mostrar_ocultar_dato"/>
 
                     </LinearLayout>
 
@@ -173,7 +172,6 @@
                                 android:id="@+id/infoText2"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="82771927F"
                                 android:textSize="14sp"
                                 android:textColor="#757575" />
 
@@ -188,7 +186,7 @@
                             android:clickable="true"
                             android:focusable="true"
                             android:src="@drawable/mostrar"
-                            android:contentDescription="@string/descripcion_mostrar_ocultar_nombre"/>
+                            android:contentDescription="@string/descripcion_mostrar_ocultar_dato"/>
 
                     </LinearLayout>
 
@@ -232,7 +230,6 @@
                                 android:id="@+id/infoText3"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="02/01/2003"
                                 android:textSize="14sp"
                                 android:textColor="#757575" />
 
@@ -247,7 +244,7 @@
                             android:clickable="true"
                             android:focusable="true"
                             android:src="@drawable/mostrar"
-                            android:contentDescription="@string/descripcion_mostrar_ocultar_nombre"/>
+                            android:contentDescription="@string/descripcion_mostrar_ocultar_dato"/>
 
                     </LinearLayout>
 
@@ -291,7 +288,6 @@
                                 android:id="@+id/infoText4"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="816827697"
                                 android:textSize="14sp"
                                 android:textColor="#757575" />
 
@@ -306,7 +302,7 @@
                             android:clickable="true"
                             android:focusable="true"
                             android:src="@drawable/mostrar"
-                            android:contentDescription="@string/descripcion_mostrar_ocultar_nombre"/>
+                            android:contentDescription="@string/descripcion_mostrar_ocultar_dato"/>
 
                     </LinearLayout>
 
@@ -324,15 +320,15 @@
             android:visibility="gone">
 
             <TextView
-            android:id="@+id/textViewMostrarOcultarQr"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Mostrar último QR guardado"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:textColor="@color/black"
-            android:layout_marginStart="4dp"/>
+                android:id="@+id/textViewMostrarOcultarQr"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_weight="1"
+                android:text="@string/mostrarQR"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:textStyle="bold" />
 
             <ImageView
                 android:id="@+id/imageViewMostrarOcultarQr"
@@ -345,9 +341,6 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginEnd="4dp"/>
 
-
-
-
         </LinearLayout>
 
         <ImageView
@@ -359,8 +352,6 @@
             android:visibility="gone"
             android:contentDescription="Código QR guardado" />
         </LinearLayout>
-
-
 
     </ScrollView>
 
@@ -377,7 +368,7 @@
             android:layout_height="wrap_content"
             android:paddingHorizontal="32dp"
             android:paddingVertical="12dp"
-            android:text="Enviar"
+            android:text="@string/buttonEnviar"
             android:textSize="16sp"
             app:cornerRadius="8dp" />
 

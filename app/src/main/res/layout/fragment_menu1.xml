@@ -34,12 +34,6 @@
             android:layout_height="40dp"
             android:src="@drawable/notificacion" />
 
-        <!-- <ImageView
-            android:layout_width="80dp"
-            android:layout_height="40dp"
-            android:layout_marginStart="16dp"
-            android:src="@drawable/config" /> -->
-
     </LinearLayout>
 
     <ScrollView
@@ -64,9 +58,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
+                    android:layout_marginStart="50dp"
                     android:layout_marginTop="16dp"
                     android:layout_weight="1"
-                    android:text="        Mi Wallet SSI"
+                    android:text="@string/tituloMenu"
                     android:textAlignment="center"
                     android:textSize="24sp"
                     android:textStyle="bold" />
@@ -80,7 +75,6 @@
                     android:focusable="true"
                     android:src="@drawable/lupa"
                     android:contentDescription="@string/buscar_credenciales"/>
-
 
         </LinearLayout>
 
@@ -180,7 +174,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="32dp"
-                android:text="Actividad reciente"
+                android:text="@string/textListActividad"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 

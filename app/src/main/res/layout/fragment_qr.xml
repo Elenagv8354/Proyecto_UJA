@@ -39,26 +39,27 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
+        android:background="@color/colorFondo"
         android:orientation="vertical"
         android:padding="24dp">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Código QR"
+            android:layout_gravity="center_horizontal"
+            android:text="@string/text_QR"
             android:textSize="28sp"
-            android:textStyle="bold"
-            android:layout_gravity="center_horizontal" />
+            android:textStyle="bold" />
 
         <ImageView
             android:id="@+id/imageViewQrCode"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
             android:layout_marginTop="32dp"
             android:adjustViewBounds="true"
             android:maxWidth="300dp"
             android:maxHeight="300dp"
-            android:layout_gravity="center_horizontal"
             tools:src="@drawable/codigo_qr" />
 
     </LinearLayout>
@@ -77,7 +78,7 @@
             android:layout_marginEnd="8dp"
             android:layout_weight="1"
             android:paddingVertical="12dp"
-            android:text="Escanear"
+            android:text="@string/boton_escanear"
             android:textSize="14sp"
             app:cornerRadius="8dp" />
 
@@ -89,7 +90,7 @@
             android:layout_marginEnd="8dp"
             android:layout_weight="1"
             android:paddingVertical="12dp"
-            android:text="Compartir"
+            android:text="@string/boton_compartir"
             android:textSize="14sp"
             app:cornerRadius="8dp" />
 
@@ -100,7 +101,7 @@
             android:layout_marginStart="8dp"
             android:layout_weight="1"
             android:paddingVertical="12dp"
-            android:text="Descargar"
+            android:text="@string/boton_descargar"
             android:textSize="14sp"
             app:cornerRadius="8dp" />
 
