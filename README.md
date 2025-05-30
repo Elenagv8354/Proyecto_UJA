@@ -31,9 +31,9 @@ Permite a los usuarios organizar sus credenciales, generar códigos QR a partir 
       <li>El último código generado se guarda internamente para su posterior visualización o uso</li>
     </ul>
   <li>Actividad reciente</li>
-    <lu>
-      <li>Panel en la pantalla principal donde se muestran las acciones recientes del usuario.</li>
-    </lu>
+    <ul>
+      <li>Panel en la pantalla principal donde se muestran las acciones recientes del usuario</li>
+    </ul>
   <li>Gestión de sesión</li>
     <ul>
       <li>Sistema de autenticación de usuario y contraseña</li>
