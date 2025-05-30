@@ -8,6 +8,7 @@ import android.os.Bundle;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +28,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link FragmentCredencial#} factory method to
@@ -38,12 +40,17 @@ public class FragmentCredencial extends Fragment {
     private NavController navController;
     private Button botonEnviar;
     private ImageView imageViewQrGuardado;
+    private ImageView imageViewMostrarOcultarQr;
+    private TextView textViewMostrarOcultarQr;
+    private LinearLayout layoutQrToggle;
 
     // Estado de visibilidad de la información detallada
     private boolean isNombreVisible = false;
     private boolean isDniVisible = false;
     private boolean isNacimientoVisible = false;
     private boolean isTelefonoVisible = false;
+    private boolean isQrVisible = false;
+
 
     // Views para cada dato
     private TextView infoText1;
@@ -88,8 +95,26 @@ public class FragmentCredencial extends Fragment {
         infoText4 = view.findViewById(R.id.infoText4);
         imageViewMostrarOcultarTelefono = view.findViewById(R.id.imageViewMostrarOcultarTelefono);
 
+        // Inicializar vistas del QR guardado y su "ojito"
         imageViewQrGuardado = view.findViewById(R.id.imageViewQrGuardado);
-        cargarQrGuardado(); // Llama a la función para cargar el QR guardado
+        imageViewMostrarOcultarQr = view.findViewById(R.id.imageViewMostrarOcultarQr); // NUEVO ID
+        textViewMostrarOcultarQr = view.findViewById(R.id.textViewMostrarOcultarQr); // NUEVO ID
+        layoutQrToggle = view.findViewById(R.id.layoutQrToggle); // ¡Inicializar el LinearLayout!
+
+        // Carga el QR guardado si existe, pero no lo muestra por defecto
+        boolean qrExiste = cargarQrGuardado();
+
+        // Si no hay QR guardado, ocultar el "ojito" y el texto para el QR
+        if (!qrExiste) {
+            imageViewMostrarOcultarQr.setVisibility(View.GONE);
+            textViewMostrarOcultarQr.setVisibility(View.GONE);
+        } else {
+            // Si hay QR, asegúrate de que el "ojito" y el texto estén visibles,
+            // y que el QR mismo esté oculto (estado inicial isQrVisible = false)
+            imageViewMostrarOcultarQr.setVisibility(View.VISIBLE);
+            textViewMostrarOcultarQr.setVisibility(View.VISIBLE);
+            imageViewQrGuardado.setVisibility(View.GONE); // Aseguramos que el QR está oculto al inicio
+        }
 
         // Establecer OnLongClickListener para borrar el código QR
         imageViewQrGuardado.setOnLongClickListener(v -> {
@@ -124,6 +149,11 @@ public class FragmentCredencial extends Fragment {
             isTelefonoVisible = !isTelefonoVisible;
             applyVisibilityState(infoText4, imageViewMostrarOcultarTelefono, isTelefonoVisible, realTelefono);
         });
+        // --- NUEVO LISTENER PARA EL "OJITO" DEL QR ---
+        imageViewMostrarOcultarQr.setOnClickListener(v -> {
+            isQrVisible = !isQrVisible; // Invertir el estado de visibilidad del QR
+            applyQrVisibilityState(imageViewQrGuardado, imageViewMostrarOcultarQr, isQrVisible);
+        });
 
 
         botonEnviar = view.findViewById(R.id.boton_enviar);
@@ -143,7 +173,46 @@ public class FragmentCredencial extends Fragment {
         }
     } // Cierre correcto de onViewCreated
 
-    private void cargarQrGuardado() {
+    // --- Aquí es donde debe ir el método onResume() ---
+    @Override
+    public void onResume() {
+        super.onResume();
+        // Llama a cargarQrGuardado cada vez que el fragment se vuelve visible
+        // Esto es crucial para que el QR se muestre si se ha generado y guardado en FragmentQr
+        boolean qrExiste = cargarQrGuardado();
+        Log.d("FragmentCredencial", "onResume: QR existe? " + qrExiste); // Para depuración
+
+        // Reinicia el estado de visibilidad del QR para que siempre inicie oculto
+        // y el usuario lo active manualmente con el "ojito".
+        isQrVisible = false;
+
+        // Lógica de visibilidad para el QR y su control
+        if (qrExiste) {
+            // Si hay QR, el layout con el "ojito" y el texto debe ser visible
+            if (layoutQrToggle != null) {
+                layoutQrToggle.setVisibility(View.VISIBLE);
+            }
+            // El ImageView del QR debe estar oculto por defecto
+            imageViewQrGuardado.setVisibility(View.GONE);
+            // El icono del "ojito" debe mostrarse como "cerrado"
+            imageViewMostrarOcultarQr.setImageResource(R.drawable.mostrar_ocultar);
+        } else {
+            // Si no hay QR, ocultar todo lo relacionado con el QR
+            if (layoutQrToggle != null) {
+                layoutQrToggle.setVisibility(View.GONE);
+            }
+            imageViewQrGuardado.setVisibility(View.GONE);
+        }
+
+        // También inicializa la visibilidad de los datos de la credencial aquí
+        // para que se restablezcan correctamente si el usuario los ocultó antes de ir al FragmentQr
+        applyVisibilityState(infoText1, imageViewMostrarOcultarNombre, isNombreVisible, realNombre);
+        applyVisibilityState(infoText2, imageViewMostrarOcultarDni, isDniVisible, realDni);
+        applyVisibilityState(infoText3, imageViewMostrarOcultarNacimiento, isNacimientoVisible, realNacimiento);
+        applyVisibilityState(infoText4, imageViewMostrarOcultarTelefono, isTelefonoVisible, realTelefono);
+    }
+
+    private boolean cargarQrGuardado() {
         // Obtiene el directorio de archivos internos
         File directorioInterno = requireContext().getFilesDir();
         // Crea una referencia al archivo del código QR guardado
@@ -151,15 +220,12 @@ public class FragmentCredencial extends Fragment {
 
         // Verifica si el archivo existe
         if (archivoQr.exists()) {
-            // Decodifica el archivo de imagen en un objeto Bitmap
             Bitmap bitmapQr = BitmapFactory.decodeFile(archivoQr.getAbsolutePath());
-            // Establece el Bitmap en el ImageView para mostrarlo
             imageViewQrGuardado.setImageBitmap(bitmapQr);
-            // Haz visible el ImageView ahora que tiene una imagen
-            imageViewQrGuardado.setVisibility(View.VISIBLE);
+            // IMPORTANTE: No lo hacemos visible aquí. Su visibilidad la controlará el nuevo "ojito".
+            return true; // Indica que se encontró y cargó un QR
         } else {
-            // Si el archivo no existe (nunca se ha guardado un QR), oculta el ImageView
-            imageViewQrGuardado.setVisibility(View.GONE);
+            return false; // No se encontró un QR
         }
     }
 
@@ -183,7 +249,13 @@ public class FragmentCredencial extends Fragment {
         if (archivoQr.exists()) {
             if (archivoQr.delete()) {
                 Toast.makeText(requireContext(), "Código QR borrado", Toast.LENGTH_SHORT).show();
-                imageViewQrGuardado.setVisibility(View.GONE); // Oculta el ImageView después de borrar
+                imageViewQrGuardado.setVisibility(View.GONE);
+                isQrVisible = false;
+                // Oculta el LinearLayout completo que contiene el "ojito" y el texto
+                if (layoutQrToggle != null) { // Asegúrate de que 'layoutQrToggle' no sea nulo antes de usarlo
+                    layoutQrToggle.setVisibility(View.GONE);
+                }
+                imageViewMostrarOcultarQr.setImageResource(R.drawable.mostrar_ocultar); // Asegurar icono de ojo cerrado
             } else {
                 Toast.makeText(requireContext(), "Error al borrar el código QR", Toast.LENGTH_SHORT).show();
             }
@@ -192,19 +264,27 @@ public class FragmentCredencial extends Fragment {
         }
     }
 
-    // --- FUNCIÓN CLAVE: PARA APLICAR EL ESTADO DE VISIBILIDAD ---
-    // Esta función maneja la lógica de mostrar/ocultar y cambiar el icono del ojo.
+    // --- FUNCIÓN PARA APLICAR EL ESTADO DE VISIBILIDAD DE LOS DATOS DE LA CREDENCIAL ---
     private void applyVisibilityState(TextView textView, ImageView imageView, boolean visible, String data) {
         if (visible) {
-            textView.setText(data); // Asigna el dato real
-            textView.setVisibility(View.VISIBLE); // ¡Hace el TextView visible!
-            // SUGERENCIA: Usa iconos más descriptivos como ic_visibility_on
-            imageView.setImageResource(R.drawable.mostrar); // Ojo ABIERTO
+            textView.setText(data);
+            textView.setVisibility(View.VISIBLE);
+            imageView.setImageResource(R.drawable.mostrar); // Ojo ABIERTO (considera cambiar a ic_visibility_on)
         } else {
-            textView.setText(""); // Limpia el texto (opcional, pero buena práctica si está GONE)
-            textView.setVisibility(View.GONE); // ¡Hace el TextView GONE (oculto completamente)!
-            // SUGERENCIA: Usa iconos más descriptivos como ic_visibility_off
-            imageView.setImageResource(R.drawable.mostrar_ocultar); // Ojo CERRADO
+            textView.setText("");
+            textView.setVisibility(View.GONE);
+            imageView.setImageResource(R.drawable.mostrar_ocultar); // Ojo CERRADO (considera cambiar a ic_visibility_off)
+        }
+    }
+
+    // --- ¡NUEVA FUNCIÓN! Para aplicar el estado de visibilidad del QR ---
+    private void applyQrVisibilityState(ImageView qrImageView, ImageView toggleImageView, boolean visible) {
+        if (visible) {
+            qrImageView.setVisibility(View.VISIBLE); // Muestra el QR
+            toggleImageView.setImageResource(R.drawable.mostrar); // Ojo ABIERTO para el QR
+        } else {
+            qrImageView.setVisibility(View.GONE); // Oculta el QR
+            toggleImageView.setImageResource(R.drawable.mostrar_ocultar); // Ojo CERRADO para el QR
         }
     }
 

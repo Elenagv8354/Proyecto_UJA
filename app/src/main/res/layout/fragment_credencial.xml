@@ -313,13 +313,51 @@
                 </androidx.cardview.widget.CardView>
 
             </LinearLayout>
-            <ImageView
-                android:id="@+id/imageViewQrGuardado"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:visibility="gone" android:layout_marginTop="16dp" />
+        <LinearLayout
+            android:id="@+id/layoutQrToggle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:padding="12dp"
+            android:layout_marginTop="16dp"
+            android:visibility="gone">
 
+            <TextView
+            android:id="@+id/textViewMostrarOcultarQr"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Mostrar último QR guardado"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:layout_marginStart="4dp"/>
+
+            <ImageView
+                android:id="@+id/imageViewMostrarOcultarQr"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:src="@drawable/mostrar_ocultar"
+                android:contentDescription="Mostrar u ocultar código QR"
+                android:clickable="true"
+                android:focusable="true"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="4dp"/>
+
+
+
+
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/imageViewQrGuardado"
+            android:layout_width="250dp"
+            android:layout_height="250dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="16dp"
+            android:visibility="gone"
+            android:contentDescription="Código QR guardado" />
         </LinearLayout>
 
 
